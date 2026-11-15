@@ -1,31 +1,69 @@
 <!doctype html>
-<html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0b181b"><meta name="description" content="赤隼：断线行动。重构经典横版跑跳射击，突入雨林，摧毁机械要塞。"><title>赤隼 · 断线行动 — RED FALCON</title><link rel="icon" href="./favicon.svg"><link rel="stylesheet" href="./style.css"></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0b181b">
+  <meta name="description" data-i18n-content="meta.description" content="An original run-and-gun mission. Cross the rainforest and destroy the mechanical guardian.">
+  <title>Red Falcon: Broken Signal</title><link rel="icon" href="./favicon.svg"><link rel="stylesheet" href="./style.css">
+</head>
 <body>
 <main id="app">
-  <canvas id="game" aria-label="赤隼横版射击游戏。按 Enter 开始，A D 移动，空格二段跳，J 射击，Shift 冲刺，K 手雷，Esc 暂停。" tabindex="0"></canvas>
+  <canvas id="game" data-i18n-aria-label="a11y.game" aria-label="Red Falcon. Enter to start, A/D to move, Space to double jump, J to fire, Shift to dash, K for grenades, Esc to pause." tabindex="0"></canvas>
   <div class="grain" aria-hidden="true"></div>
-  <header class="topbar"><a class="brand" href="./" aria-label="赤隼首页"><svg viewBox="0 0 48 36" aria-hidden="true"><path d="M2 3l22 9L46 3 33 23 24 33 15 23z"/><path class="cut" d="M18 12l6 6 6-6-6 17z"/></svg><span>FALCON <b>UNIT</b></span></a><span class="top-code">TACTICAL RUN & GUN <i></i> EPISODE 01</span><div class="top-actions"><button id="sound" class="icon-btn" aria-label="关闭声音" title="声音 M">♫</button><button id="fullscreen" class="icon-btn" aria-label="进入全屏" title="全屏 F">⛶</button><button id="pause" class="icon-btn hidden" aria-label="暂停游戏" title="暂停 Esc">Ⅱ</button></div></header>
+  <header class="topbar">
+    <a class="brand" href="./" data-i18n-aria-label="a11y.home" aria-label="Red Falcon home"><svg viewBox="0 0 48 36" aria-hidden="true"><path d="M2 3l22 9L46 3 33 23 24 33 15 23z"/><path class="cut" d="M18 12l6 6 6-6-6 17z"/></svg><span>FALCON <b>UNIT</b></span></a>
+    <span class="top-code"><span data-i18n="header.genre">TACTICAL RUN &amp; GUN</span><i></i><span data-i18n="header.episode">EPISODE 01</span></span>
+    <div class="top-actions">
+      <div class="language-switch" role="group" aria-label="Language / 语言"><button data-locale="en" lang="en" aria-label="English" aria-pressed="true">EN</button><button data-locale="zh-CN" lang="zh-CN" aria-label="简体中文" aria-pressed="false">中文</button></div>
+      <button id="sound" class="icon-btn" aria-label="Mute audio" data-i18n-title="shortcut.sound" title="Sound · M">♫</button>
+      <button id="fullscreen" class="icon-btn" aria-label="Enter fullscreen" data-i18n-title="shortcut.fullscreen" title="Fullscreen · F">⛶</button>
+      <button id="pause" class="icon-btn hidden" data-i18n-aria-label="action.pause" aria-label="Pause game" data-i18n-title="shortcut.pause" title="Pause · Esc">Ⅱ</button>
+    </div>
+  </header>
   <section id="menu" class="screen menu">
-    <div class="hero"><div class="eyebrow"><span class="signal"></span> 机密行动档案 / RF—001</div><h1>赤隼<span>RED FALCON</span></h1><div class="subtitle"><span></span> 断线行动 <small>OPERATION: BROKEN SIGNAL</small></div><p class="intro">最后一个信号，来自雨林深处。<br>穿过封锁线，让沉默的前哨重新回应。</p><div class="launch"><button id="start" class="primary">开始行动 <span>↗</span></button><button id="help" class="secondary">作战指南 <span>＋</span></button></div><div class="difficulty"><span>作战强度</span><button data-difficulty="normal" class="selected">标准</button><button data-difficulty="veteran">老兵</button><span id="difficulty-note">护甲保护 · 检查点续战</span></div></div>
-    <div class="scene-label"><span class="crosshair">＋</span><div>06° 14′ N &nbsp; 108° 32′ E<br><strong>苍翠禁区</strong><span>失联 72 小时 / 状态未知</span></div></div>
-    <footer class="mission-strip"><div class="mission-number">01 <span>第一章<br>翠雨前哨</span></div><div class="route"><span class="route-item active"><b>01</b> 丛林突入</span><i></i><span class="route-item"><b>02</b> 断桥封锁</span><i></i><span class="route-item"><b>03</b> 钢铁守卫</span></div><div class="mission-meta"><span>单人任务 / 三段式关卡</span><small>推荐键盘 + 鼠标 · 支持触屏</small></div></footer>
+    <div class="hero">
+      <div class="eyebrow"><span class="signal"></span><span data-i18n="hero.file">CLASSIFIED MISSION / RF—001</span></div>
+      <h1><span class="title-main" data-i18n="hero.title">RED
+FALCON</span><span class="title-caption" data-i18n="hero.caption">TACTICAL RUN &amp; GUN</span></h1>
+      <div class="subtitle"><span></span><b data-i18n="hero.operation">BROKEN SIGNAL</b><small data-i18n="hero.operationCode">OPERATION 01</small></div>
+      <p class="intro"><span data-i18n="hero.intro1">The last signal came from deep in the rainforest.</span><br><span data-i18n="hero.intro2">Break the blockade. Bring the outpost back online.</span></p>
+      <div class="launch"><button id="start" class="primary"><span class="button-label" data-i18n="action.start">Start mission</span><span aria-hidden="true">↗</span></button><button id="help" class="secondary"><span class="button-label" data-i18n="action.guide">Field manual</span><span aria-hidden="true">＋</span></button></div>
+      <div class="difficulty"><span data-i18n="difficulty.label">Difficulty</span><button data-difficulty="normal" data-i18n="difficulty.normal" class="selected" aria-pressed="true">Standard</button><button data-difficulty="veteran" data-i18n="difficulty.veteran" aria-pressed="false">Veteran</button><span id="difficulty-note">Armor + checkpoint retries</span></div>
+    </div>
+    <div class="scene-label"><span class="crosshair">＋</span><div>06° 14′ N &nbsp; 108° 32′ E<br><strong data-i18n="scene.name">Verdant Exclusion Zone</strong><span data-i18n="scene.status">OFFLINE 72 HOURS / STATUS UNKNOWN</span></div></div>
+    <footer class="mission-strip">
+      <div class="mission-number">01 <div class="mission-details"><span data-i18n="mission.chapter">CHAPTER ONE</span><span data-i18n="mission.name">Verdant Outpost</span></div></div>
+      <div class="route"><span class="route-item active"><b>01</b><span data-i18n="route.jungle">Infiltration</span></span><i></i><span class="route-item"><b>02</b><span data-i18n="route.bridge">Broken Bridge</span></span><i></i><span class="route-item"><b>03</b><span data-i18n="route.guardian">Iron Guardian</span></span></div>
+      <div class="mission-meta"><span data-i18n="mission.mode">Solo mission / Three sectors</span><small data-i18n="mission.devices">Keyboard + mouse recommended · Touch ready</small></div>
+    </footer>
   </section>
-  <section id="hud" class="hidden" aria-label="战斗状态">
-    <div class="player-hud"><div class="hud-caption"><span>RF–01 <b>隼</b></span><span id="health-number">100</span></div><div id="health-bar"><i></i></div><div class="hud-bottom"><span id="dash-status">冲刺就绪</span><span id="grenade-count">◆ ◆ ◆ ◆</span></div></div>
-    <div class="objective"><span id="sector-label">01 / 丛林突入</span><strong id="objective-label">穿过雨林，抵达断桥</strong><div class="progress-track"><i id="progress"></i><b></b><b></b></div></div>
-    <div class="score-hud"><span>行动积分</span><strong id="score">000000</strong><small id="timer">00:00</small></div>
-    <div class="weapon-hud"><span id="weapon-code">01 / PULSE RIFLE</span><strong id="weapon-name">脉冲步枪 <b>∞</b></strong><small id="weapon-hint">Q 切换武器</small></div>
-    <div class="keyboard-hint"><span><kbd>A</kbd><kbd>D</kbd> 移动</span><span><kbd>空格</kbd> 二段跳</span><span><kbd>J</kbd> 射击</span><span><kbd>⇧</kbd> 冲刺</span><span><kbd>K</kbd> 手雷</span></div>
-    <div id="boss-hud" class="hidden"><div><span>重型封锁兵器 / AEGIS–07</span><strong>钢铁守卫</strong><small id="boss-phase">阶段 I</small></div><div class="boss-track"><i></i></div></div>
+  <section id="hud" class="hidden" data-i18n-aria-label="a11y.hud" aria-label="Combat status">
+    <div class="player-hud"><div class="hud-caption"><span>RF–01 <b data-i18n="hud.player">FALCON</b></span><span id="health-number">100</span></div><div id="health-bar"><i></i></div><div class="hud-bottom"><span id="dash-status">Dash ready</span><span id="grenade-count">◆ ◆ ◆ ◆</span></div></div>
+    <div class="objective"><span id="sector-label">01 / Jungle Infiltration</span><strong id="objective-label">Cross the rainforest. Reach the bridge.</strong><div class="progress-track"><i id="progress"></i><b></b><b></b></div></div>
+    <div class="score-hud"><span data-i18n="hud.score">MISSION SCORE</span><strong id="score">000000</strong><small id="timer">00:00</small></div>
+    <div class="weapon-hud"><span id="weapon-code">01 / PULSE RIFLE</span><strong id="weapon-name"><span id="weapon-label">Pulse Rifle</span><b>∞</b></strong><small id="weapon-hint">Collect S / R to unlock weapons</small></div>
+    <div class="keyboard-hint"><span><kbd>A</kbd><kbd>D</kbd><span data-i18n="control.move">Move</span></span><span><kbd data-i18n="key.space">Space</kbd><span data-i18n="control.jump">Double jump</span></span><span><kbd>J</kbd><span data-i18n="control.fire">Fire</span></span><span><kbd>⇧</kbd><span data-i18n="control.dash">Dash</span></span><span><kbd>K</kbd><span data-i18n="control.grenade">Grenade</span></span></div>
+    <div id="boss-hud" class="hidden"><div><span data-i18n="boss.type">BLOCKADE WEAPON / AEGIS–07</span><strong data-i18n="boss.name">Iron Guardian</strong><small id="boss-phase">PHASE I</small></div><div class="boss-track"><i></i></div></div>
   </section>
   <div id="notification" role="status" aria-live="polite"></div>
-  <div id="sector-banner" class="hidden"><small>AREA 01</small><strong>丛林突入</strong><span>穿过雨林，抵达断桥</span></div>
-  <section id="pause-screen" class="screen centered hidden"><div class="panel"><div class="eyebrow">SIGNAL ON HOLD</div><h2>行动暂停</h2><p>喘口气，再继续前进。</p><button id="resume" class="primary">继续行动 <span>↗</span></button><button id="restart" class="secondary">从检查点重新出发</button><button id="exit" class="text-btn">返回主界面</button></div></section>
-  <section id="death-screen" class="screen centered hidden"><div class="panel"><div class="eyebrow orange">CONNECTION LOST</div><h2>信号中断</h2><p>阵地还在。下一次，我们会更接近。</p><button id="retry" class="primary">从检查点续战 <span>↗</span></button><button id="death-exit" class="text-btn">返回主界面</button></div></section>
-  <section id="victory" class="screen centered hidden"><div class="panel victory-panel"><div class="eyebrow">TRANSMISSION RESTORED</div><h2>信号，重新接通。</h2><p>翠雨前哨已解除封锁。干得漂亮，隼。</p><div class="results"><div class="rank" id="rank">A</div><div><span>行动积分</span><strong id="final-score">0</strong></div><div><span>任务用时</span><strong id="final-time">00:00</strong></div><div><span>击破 / 续战</span><strong id="final-kills">0 / 0</strong></div></div><div id="best-result"></div><button id="replay" class="primary">再来一次 <span>↗</span></button><button id="victory-exit" class="text-btn">返回主界面</button></div></section>
-  <dialog id="guide"><div class="guide-head"><div><div class="eyebrow">FIELD MANUAL / 01</div><h2>把本能，变成火力。</h2></div><button id="close-guide" class="icon-btn" aria-label="关闭作战指南">×</button></div><div class="guide-grid"><div><kbd>A D / ← →</kbd><strong>移动</strong><p>移动中保持射击，突破封锁。</p></div><div><kbd>空格 / L</kbd><strong>二段跳</strong><p>在空中再按一次，跨越断桥。</p></div><div><kbd>J / 鼠标左键</kbd><strong>持续射击</strong><p>按住连射；鼠标瞄准，W/S 上下瞄准。</p></div><div><kbd>Shift / H</kbd><strong>战术冲刺</strong><p>短暂无敌，穿过弹幕。冷却 1.2 秒。</p></div><div><kbd>K / 右键</kbd><strong>投掷手雷</strong><p>范围爆破。检查点补充弹药。</p></div><div><kbd>Q</kbd><strong>切换武器</strong><p>拾取 S 散射炮、R 电磁步枪解锁。</p></div></div><div class="guide-tip"><b>战术提示</b> 橙色是敌方火力。留意红色落点与 Boss 蓄力；跳跃躲震荡波，冲刺穿过弹幕。绿色信标保存进度并补满护甲。</div><div class="guide-footer"><span>Esc 暂停 · M 声音 · F 全屏</span><button id="guide-ready" class="secondary">准备就绪 →</button></div></dialog>
-  <div id="touch-controls" class="hidden"><div class="touch-move"><button data-key="KeyA" aria-label="向左移动">◀</button><button data-key="KeyD" aria-label="向右移动">▶</button></div><div class="touch-actions"><button data-key="KeyQ" aria-label="切换武器">换</button><button data-key="ShiftLeft" aria-label="冲刺">闪</button><button data-key="KeyK" aria-label="手雷">雷</button><button data-key="Space" aria-label="跳跃">跃</button><button data-key="KeyJ" class="fire-touch" aria-label="射击">火</button></div></div>
-  <div id="boot-error" class="hidden" role="alert">游戏加载失败，请刷新页面重试。</div>
-</main><script type="module" src="./src/main.js"></script>
+  <div id="sector-banner" class="hidden"><small>AREA 01</small><strong>Jungle Infiltration</strong><span>Cross the rainforest. Reach the bridge.</span></div>
+  <section id="pause-screen" class="screen centered hidden"><div class="panel"><div class="eyebrow" data-i18n="pause.eyebrow">SIGNAL ON HOLD</div><h2 data-i18n="pause.title">Mission paused</h2><p data-i18n="pause.body">Catch your breath. Then keep moving.</p><button id="resume" class="primary"><span class="button-label" data-i18n="action.resume">Resume mission</span><span aria-hidden="true">↗</span></button><button id="restart" class="secondary" data-i18n="action.restart">Restart from checkpoint</button><button id="exit" class="text-btn" data-i18n="action.menu">Main menu</button></div></section>
+  <section id="death-screen" class="screen centered hidden"><div class="panel"><div class="eyebrow orange" data-i18n="death.eyebrow">CONNECTION LOST</div><h2 data-i18n="death.title">Signal lost</h2><p data-i18n="death.body">The outpost is still there. Next time, get closer.</p><button id="retry" class="primary"><span class="button-label" data-i18n="action.retry">Retry checkpoint</span><span aria-hidden="true">↗</span></button><button id="death-exit" class="text-btn" data-i18n="action.menu">Main menu</button></div></section>
+  <section id="victory" class="screen centered hidden"><div class="panel victory-panel"><div class="eyebrow" data-i18n="victory.eyebrow">TRANSMISSION RESTORED</div><h2 data-i18n="victory.title">Back on the air.</h2><p data-i18n="victory.body">Verdant Outpost is clear. Good work, Falcon.</p><div class="results"><div class="rank" id="rank">A</div><div><span data-i18n="hud.score">MISSION SCORE</span><strong id="final-score">0</strong></div><div><span data-i18n="victory.time">MISSION TIME</span><strong id="final-time">00:00</strong></div><div><span data-i18n="victory.kills">KILLS / RETRIES</span><strong id="final-kills">0 / 0</strong></div></div><div id="best-result"></div><button id="replay" class="primary"><span class="button-label" data-i18n="action.replay">Play again</span><span aria-hidden="true">↗</span></button><button id="victory-exit" class="text-btn" data-i18n="action.menu">Main menu</button></div></section>
+  <dialog id="guide">
+    <div class="guide-head"><div><div class="eyebrow" data-i18n="guide.eyebrow">FIELD MANUAL / 01</div><h2 data-i18n="guide.title">Turn instinct into firepower.</h2></div><button id="close-guide" class="icon-btn" data-i18n-aria-label="a11y.closeGuide" aria-label="Close field manual">×</button></div>
+    <div class="guide-grid">
+      <div><kbd>A D / ← →</kbd><strong data-i18n="control.move">Move</strong><p data-i18n="guide.move">Keep firing on the move to break through.</p></div>
+      <div><kbd data-i18n="guide.jumpKey">Space / L</kbd><strong data-i18n="control.jump">Double jump</strong><p data-i18n="guide.jump">Press again in midair to cross broken bridges.</p></div>
+      <div><kbd data-i18n="guide.fireKey">J / Left click</kbd><strong data-i18n="guide.fireTitle">Continuous fire</strong><p data-i18n="guide.fire">Hold to fire. Aim with the mouse, or use W/S to aim up/down.</p></div>
+      <div><kbd>Shift / H</kbd><strong data-i18n="guide.dashTitle">Tactical dash</strong><p data-i18n="guide.dash">Briefly invulnerable. Dash through fire; 1.2-second cooldown.</p></div>
+      <div><kbd data-i18n="guide.grenadeKey">K / Right click</kbd><strong data-i18n="guide.grenadeTitle">Throw a grenade</strong><p data-i18n="guide.grenade">Area damage. Checkpoints replenish your supply.</p></div>
+      <div><kbd>Q</kbd><strong data-i18n="control.switch">Switch weapon</strong><p data-i18n="guide.switch">Collect S for Swarm Shot and R for the Arc Railgun.</p></div>
+    </div>
+    <div class="guide-tip"><b data-i18n="guide.tipTitle">FIELD TIPS</b><span data-i18n="guide.tip">Orange means enemy fire. Watch for marked impact zones and boss charges. Jump over shockwaves; dash through volleys. Green beacons save progress and restore armor.</span></div>
+    <div class="guide-footer"><span data-i18n="guide.shortcuts">Esc pause · M sound · F fullscreen</span><div class="language-switch" role="group" aria-label="Language / 语言"><button data-locale="en" lang="en" aria-label="English" aria-pressed="true">EN</button><button data-locale="zh-CN" lang="zh-CN" aria-label="简体中文" aria-pressed="false">中文</button></div><button id="guide-ready" class="secondary" data-i18n="action.ready">Ready to go →</button></div>
+  </dialog>
+  <div id="touch-controls" class="hidden"><div class="touch-move"><button data-key="KeyA" data-i18n-aria-label="a11y.left" aria-label="Move left">◀</button><button data-key="KeyD" data-i18n-aria-label="a11y.right" aria-label="Move right">▶</button></div><div class="touch-actions"><button data-key="KeyQ" data-i18n="touch.switch" data-i18n-aria-label="control.switch" aria-label="Switch weapon">Swap</button><button data-key="ShiftLeft" data-i18n="touch.dash" data-i18n-aria-label="control.dash" aria-label="Dash">Dash</button><button data-key="KeyK" data-i18n="touch.grenade" data-i18n-aria-label="control.grenade" aria-label="Grenade">Bomb</button><button data-key="Space" data-i18n="touch.jump" data-i18n-aria-label="a11y.jump" aria-label="Jump">Jump</button><button data-key="KeyJ" class="fire-touch" data-i18n="touch.fire" data-i18n-aria-label="control.fire" aria-label="Fire">Fire</button></div></div>
+  <div id="boot-error" class="hidden" role="alert" data-i18n="error.boot">The game could not load. Please refresh and try again.</div>
+</main>
+<script type="module" src="./src/main.js"></script>
 </body></html>

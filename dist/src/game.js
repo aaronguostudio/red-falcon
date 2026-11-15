@@ -3,14 +3,14 @@ export const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
 export const lerp = (a,b,t) => a+(b-a)*t;
 export const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w>b.x && a.y < b.y+b.h && a.y+a.h>b.y;
 export const WEAPONS = [
-  {name:'脉冲步枪',code:'PULSE RIFLE',color:'#dff5a0',rate:.105,damage:16,speed:1100},
-  {name:'蜂群散射炮',code:'SWARM SHOT',color:'#ffc87b',rate:.27,damage:13,speed:980},
-  {name:'雷鸣电磁步枪',code:'ARC RAILGUN',color:'#82e7f0',rate:.36,damage:70,speed:2000},
+  {nameKey:'weapon.pulse',code:'PULSE RIFLE',color:'#dff5a0',rate:.105,damage:16,speed:1100},
+  {nameKey:'weapon.swarm',code:'SWARM SHOT',color:'#ffc87b',rate:.27,damage:13,speed:980},
+  {nameKey:'weapon.rail',code:'ARC RAILGUN',color:'#82e7f0',rate:.36,damage:70,speed:2000},
 ];
 export const SECTORS = [
-  {x:0,name:'丛林突入',objective:'穿过雨林，抵达断桥'},
-  {x:2300,name:'断桥封锁',objective:'越过峡谷，击穿防线'},
-  {x:4480,name:'翠雨前哨',objective:'深入前哨，摧毁钢铁守卫'},
+  {x:0,nameKey:'sector.jungle',objectiveKey:'objective.jungle'},
+  {x:2300,nameKey:'sector.bridge',objectiveKey:'objective.bridge'},
+  {x:4480,nameKey:'sector.outpost',objectiveKey:'objective.outpost'},
 ];
 export const PLATFORMS = [
   [0,590,1740,150,'earth'],[1980,590,720,150,'earth'],[2990,590,610,150,'bridge'],
@@ -48,7 +48,7 @@ export class Game {
   }
   start(){this.time=0;this.checkpoint=0;this.deaths=0;this.score=0;this.kills=0;this.maxX=120;this.sector=0;this.stats={shots:0,hits:0,damage:0};this.player=this.makePlayer(120);this.populate(0);this.clearEffects();this.state='playing';this.camera=0;this.emit('sector',{sector:0});}
   clearEffects(){this.bullets=[];this.grenades=[];this.hazards=[];this.particles=[];this.rings=[];this.texts=[];this.ghosts=[];this.shake=0;this.flash=0;this.hitstop=0;this.combo=0;this.comboTime=0;}
-  retry(){const saved=this.player.unlocked.slice();this.deaths++;this.score=Math.max(0,this.score-300);this.player=this.makePlayer(this.checkpoint||120);this.player.unlocked=saved;this.player.weapon=saved.at(-1);this.populate(this.checkpoint);this.clearEffects();this.state='playing';this.camera=clamp(this.player.x-300,0,WORLD-W);this.emit('notice',{text:'信号恢复 · 护甲与手雷已补满'});}
+  retry(){const saved=this.player.unlocked.slice();this.deaths++;this.score=Math.max(0,this.score-300);this.player=this.makePlayer(this.checkpoint||120);this.player.unlocked=saved;this.player.weapon=saved.at(-1);this.populate(this.checkpoint);this.clearEffects();this.state='playing';this.camera=clamp(this.player.x-300,0,WORLD-W);this.emit('notice',{message:{key:'notice.retry'}});}
   pause(){if(this.state==='playing'){this.state='paused';this.emit('pause');}else if(this.state==='paused'){this.state='playing';this.emit('resume');}}
   fx(x,y,count,color,speed=180){for(let i=0;i<count;i++){const a=this.random()*Math.PI*2,v=(.2+this.random())*speed;this.particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-40,life:.2+this.random()*.5,max:.7,r:1.4+this.random()*3,color});}if(this.particles.length>700)this.particles.splice(0,this.particles.length-700);}
   ring(x,y,color,r=90){this.rings.push({x,y,color,r,life:.35});}
@@ -63,7 +63,7 @@ export class Game {
     this.updateEnemies(dt);this.updateBoss(dt);this.updateBullets(dt);this.updateGrenades(dt);this.updatePickups(dt);this.updateEffects(dt);
     const p=this.player;this.maxX=Math.max(this.maxX,p.x);const target=clamp(p.x-W*.32,0,WORLD-W);this.camera=lerp(this.camera,target,1-Math.exp(-dt*5));
     const sector=this.maxX>=4480?2:this.maxX>=2300?1:0;if(sector>this.sector){this.sector=sector;this.emit('sector',{sector});}
-    for(const cp of [2380,4480,5900])if(p.x>=cp&&this.checkpoint<cp){this.checkpoint=cp;p.hp=100;p.grenades=4;this.fx(p.x+14,p.y+30,28,'#dff5a0');this.ring(p.x+14,p.y+30,'#dff5a0',120);this.emit('checkpoint');this.emit('notice',{text:'检查点已同步 · 护甲与手雷补满'});}
+    for(const cp of [2380,4480,5900])if(p.x>=cp&&this.checkpoint<cp){this.checkpoint=cp;p.hp=100;p.grenades=4;this.fx(p.x+14,p.y+30,28,'#dff5a0');this.ring(p.x+14,p.y+30,'#dff5a0',120);this.emit('checkpoint');this.emit('notice',{message:{key:'notice.checkpoint'}});}
   }
   updatePlayer(dt,input){
     const p=this.player,h=input.held||new Set(),k=input.pressed||new Set(),has=(...ks)=>ks.some(v=>h.has(v)),press=(...ks)=>ks.some(v=>k.has(v));
@@ -81,7 +81,7 @@ export class Game {
     const prevBottom=p.y+p.h;
     p.x+=p.vx*dt;p.x=clamp(p.x,this.boss.active?5900:20,WORLD-80);p.y+=p.vy*dt;p.grounded=false;
     for(const s of PLATFORMS){if(p.vy>=0&&p.x+p.w>s.x&&p.x<s.x+s.w&&prevBottom<=s.y+2&&p.y+p.h>=s.y){p.y=s.y-p.h;p.vy=0;p.grounded=true;p.coyote=.11;p.jumps=0;if(prevBottom<s.y-6){p.land=.6;this.fx(p.x+14,s.y,9,'#708c78',90);}}}
-    if(p.y>H+80){this.damagePlayer(30,true);if(this.state==='playing'){p.x=this.checkpoint||120;p.y=440;p.vx=0;p.vy=0;p.invuln=2;this.camera=clamp(p.x-300,0,WORLD-W);this.emit('notice',{text:'坠落 · 已返回最近的信标'});}}
+    if(p.y>H+80){this.damagePlayer(30,true);if(this.state==='playing'){p.x=this.checkpoint||120;p.y=440;p.vx=0;p.vy=0;p.invuln=2;this.camera=clamp(p.x-300,0,WORLD-W);this.emit('notice',{message:{key:'notice.fall'}});}}
     p.step+=Math.abs(p.vx)*dt*.04;
     if(input.aim){p.aim=Math.atan2(input.aim.y-(p.y+22),input.aim.x-(p.x+14));p.face=Math.cos(p.aim)>=0?1:-1;}
     else{let ay=(has('KeyS','ArrowDown')?1:0)-(has('KeyW','ArrowUp')?1:0);p.aim=ay?Math.atan2(ay,move||0):p.face===1?0:Math.PI;}
@@ -145,15 +145,15 @@ export class Game {
   }
   explode(x,y,size=120){this.fx(x,y,48,'#ffb36a',size*2.3);this.fx(x,y,24,'#fae9af',size);this.fx(x,y,20,'#48605d',size*.9);this.ring(x,y,'#ffe5a2',size);this.shake=Math.max(this.shake,9);this.emit('explosion');}
   updatePickups(){const p=this.player;for(const item of this.pickups){if(item.dead||!overlap({x:p.x-15,y:p.y-15,w:p.w+30,h:p.h+30},item))continue;item.dead=true;
-    if(item.type==='health'){p.hp=Math.min(100,p.hp+35);this.floating(item.x,item.y,'护甲 +35');}
-    else if(item.type==='grenade'){p.grenades=Math.min(6,p.grenades+2);this.floating(item.x,item.y,'手雷 +2');}
-    else{const index=item.type==='scatter'?1:2;if(!p.unlocked.includes(index))p.unlocked.push(index);p.weapon=index;this.emit('notice',{text:WEAPONS[index].name+'已解锁 · Q 切换武器'});this.floating(item.x,item.y,WEAPONS[index].name,WEAPONS[index].color);}
+    if(item.type==='health'){p.hp=Math.min(100,p.hp+35);this.floating(item.x,item.y,{key:'pickup.armor'});}
+    else if(item.type==='grenade'){p.grenades=Math.min(6,p.grenades+2);this.floating(item.x,item.y,{key:'pickup.grenades'});}
+    else{const index=item.type==='scatter'?1:2;if(!p.unlocked.includes(index))p.unlocked.push(index);p.weapon=index;this.emit('notice',{message:{key:'notice.weapon',params:{weapon:{key:WEAPONS[index].nameKey}}}});this.floating(item.x,item.y,{key:WEAPONS[index].nameKey},WEAPONS[index].color);}
     this.fx(item.x+15,item.y+15,20,'#dff5a0',150);this.ring(item.x+15,item.y+15,'#dff5a0',45);this.emit('pickup');}}
   updateBoss(dt){const b=this.boss,p=this.player;b.flash=Math.max(0,b.flash-dt);
     if(b.dead){b.deathTime+=dt;if(b.deathTime<2.4&&this.random()<dt*15)this.explode(b.x+this.random()*b.w,b.y+this.random()*b.h,70);if(b.deathTime>3){this.state='victory';this.score+=Math.max(0,3000-Math.floor(this.time)*5)+Math.max(0,2000-this.deaths*400);this.emit('victory');}return;}
-    if(!b.active&&p.x>5950){b.active=true;this.emit('boss');this.emit('notice',{text:'封锁兵器已启动 · 瞄准核心，跳过震荡波'});}
+    if(!b.active&&p.x>5950){b.active=true;this.emit('boss');this.emit('notice',{message:{key:'notice.boss'}});}
     if(!b.active)return;
-    if(b.hp<b.maxHp*.5&&b.phase===1){b.phase=2;b.cd=1.7;this.shake=12;this.emit('notice',{text:'钢铁守卫 · 过载模式'});this.emit('alarm');this.ring(b.x+90,b.y+110,'#ff7049',300);}
+    if(b.hp<b.maxHp*.5&&b.phase===1){b.phase=2;b.cd=1.7;this.shake=12;this.emit('notice',{message:{key:'notice.overdrive'}});this.emit('alarm');this.ring(b.x+90,b.y+110,'#ff7049',300);}
     b.cd-=dt;b.telegraph=b.cd<1?1-b.cd:0;
     if(b.cd<=0){const attack=b.attack%3;const x=b.x+65,y=b.y+110;
       if(attack===0){const a=Math.atan2(p.y+25-y,p.x+14-x);const count=b.phase===2?9:5;for(let i=0;i<count;i++)this.enemyShot(x,y,a+(i-(count-1)/2)*.14,b.phase===2?300:260,7);this.emit('bossFire');}

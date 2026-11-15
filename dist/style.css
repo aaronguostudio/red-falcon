@@ -2,3 +2,34 @@
 
 @media(max-width:500px){#touch-controls{left:10px;right:10px}.touch-move,.touch-actions{gap:5px}#touch-controls button{width:37px;height:42px;font-size:14px}#touch-controls .fire-touch{width:49px;height:54px}}
 @media(max-width:380px){.hero{width:84%}.launch{width:100%;gap:8px}.launch button{flex:1;min-width:0;gap:12px;padding:0 14px;white-space:nowrap;font-size:11px}.subtitle{gap:8px;font-size:14px}.subtitle small{font-size:6px;letter-spacing:0}.difficulty{gap:6px;font-size:10px}#difficulty-note{font-size:8px;margin-left:0}.difficulty button{padding:6px}.touch-actions{gap:3px}#touch-controls button{width:32px;height:38px}#touch-controls .fire-touch{width:40px;height:46px}}
+
+/* Language controls stay available over pause, defeat, and results screens. */
+.topbar{z-index:14;pointer-events:none}.topbar a,.top-actions{pointer-events:auto}
+.language-switch{display:flex;align-items:center;flex-shrink:0;border:1px solid var(--line);height:36px;background:#10222680}
+.language-switch button{font:11px var(--mono);padding:0 10px;height:100%;color:var(--muted);white-space:nowrap}
+.language-switch button[aria-pressed="true"]{color:var(--accent);background:#d9ed9c12;box-shadow:inset 0 -2px var(--accent)}
+.primary .button-label,.secondary .button-label{font:inherit;letter-spacing:inherit;color:inherit}
+h1 .title-main{font:inherit;letter-spacing:inherit;white-space:pre-line;margin:0}
+h1 .title-caption{font-weight:700}.subtitle b{font-weight:400}.mission-details span{display:block}
+:lang(en) .hero{top:16%;max-width:620px}
+:lang(en) h1{font-size:clamp(64px,7.2vw,104px);line-height:.88;letter-spacing:3px;margin:24px 0 14px}
+:lang(en) h1 .title-caption{font-size:13px;letter-spacing:5px;margin-top:18px}
+:lang(en) .subtitle{font-size:17px;letter-spacing:3px;margin-top:24px}
+:lang(en) .intro{font-size:13px;letter-spacing:.3px;line-height:1.9;margin:22px 0 26px}
+:lang(en) .primary,:lang(en) .secondary{letter-spacing:1px}
+:lang(en) .objective strong{letter-spacing:.3px;line-height:1.5}
+:lang(en) .hud-caption b{font:11px var(--mono);margin-left:8px}
+:lang(en) .weapon-hud{min-width:225px}:lang(en) .weapon-hud strong{letter-spacing:.5px}
+:lang(en) #sector-banner strong{font-size:40px;letter-spacing:2px}
+:lang(en) #sector-banner>span{letter-spacing:.5px}
+:lang(en) #touch-controls button{font-size:10px;font-weight:700;padding:0}
+:lang(en) .panel h2{letter-spacing:0}
+:lang(en) #boss-hud{width:470px}
+:lang(en) .guide-grid strong{display:block;margin:12px 0 0}
+.guide-head>.icon-btn{flex-shrink:0}.guide-footer{flex-wrap:wrap;gap:12px}.guide-footer>.language-switch{margin-left:auto}
+@media(max-width:1100px){.top-code{display:none}.mission-meta{display:none}}
+@media(max-height:720px){:lang(en) .hero{top:15%}:lang(en) h1{font-size:74px;margin:18px 0 12px}:lang(en) .subtitle{margin-top:18px}:lang(en) .intro{margin:16px 0 20px}}
+@media(max-width:650px){.topbar{padding:0 5%}.top-actions{gap:6px}.language-switch button{padding:0 8px}.brand{gap:7px}.brand svg{width:27px}.brand b{display:none}:lang(en) .hero{top:18%;width:84%}:lang(en) h1{font-size:64px;letter-spacing:1px}:lang(en) h1 .title-caption{font-size:9px;letter-spacing:3px}:lang(en) .subtitle{font-size:14px;letter-spacing:1px;gap:8px}:lang(en) .subtitle small{font-size:7px}:lang(en) .intro{font-size:12px}:lang(en) .launch{gap:8px}:lang(en) .launch button{flex:1;min-width:0;gap:10px;padding:0 13px;font-size:11px;letter-spacing:.3px;white-space:nowrap}:lang(en) .difficulty{flex-wrap:wrap;gap:8px}:lang(en) #difficulty-note{flex-basis:100%;margin:0}:lang(en) .mission-number{gap:8px}:lang(en) .mission-number span{letter-spacing:.3px;font-size:9px}:lang(en) .route{gap:10px}:lang(en) .route-item{font-size:8px;white-space:normal;max-width:52px;line-height:1.5}:lang(en) .weapon-hud{min-width:170px}:lang(en) #boss-hud{width:84%}:lang(en) #boss-hud>div:first-child{flex-wrap:wrap;gap:5px}:lang(en) #boss-hud>div:first-child>span{flex-basis:100%}:lang(en) #sector-banner strong{font-size:27px;letter-spacing:1px}:lang(en) .panel .primary,:lang(en) .panel .secondary{font-size:12px;padding-inline:15px;letter-spacing:.2px}.guide-footer>span{flex-basis:100%}.guide-footer>.language-switch{margin-left:0}}
+@media(max-width:380px){.brand span{display:none}.topbar{padding:0 6%}.top-actions{gap:8px}:lang(en) h1{font-size:57px}:lang(en) .subtitle{font-size:12px}:lang(en) .subtitle small{display:none}:lang(en) .intro{font-size:11px}:lang(en) .mission-number{font-size:26px}:lang(en) .route{gap:7px}:lang(en) .route-item{font-size:8px;max-width:45px}}
+@media(max-height:500px){:lang(en) .hero{top:17%;width:65%}:lang(en) h1{font-size:49px;line-height:.88;margin:12px 0 8px}:lang(en) h1 .title-caption{font-size:8px;letter-spacing:3px;margin-top:10px}:lang(en) .subtitle{font-size:12px;margin:10px 0 14px}:lang(en) .launch{max-width:370px}:lang(en) .difficulty{display:none}:lang(en) .weapon-hud{min-width:170px}:lang(en) #boss-hud{width:380px}:lang(en) #sector-banner strong{font-size:30px}}
+@media(max-height:500px){:lang(en) .launch button{min-width:0;flex:1;padding:0 16px;gap:18px;font-size:12px}:lang(en) .launch .button-label{white-space:nowrap}}

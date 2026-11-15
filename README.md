@@ -83,6 +83,7 @@ complete-mission simulation reaches the ending using normal gameplay inputs.
 | [game.js](dist/src/game.js) | Game simulation, independent of the DOM |
 | [render.js](dist/src/render.js) | Canvas drawing and visual effects |
 | [audio.js](dist/src/audio.js) | Synthesized sound effects and music |
+| [i18n.js](dist/src/i18n.js) | English / Simplified Chinese copy and saved language preference |
 | [main.js](dist/src/main.js) | Input handling and interface |
 | [game.test.mjs](tests/game.test.mjs) | Game logic and complete-mission tests |
 
@@ -93,7 +94,10 @@ does not provide cheats or level-skipping controls.
 
 English is the primary repository language. Both READMEs cover the same overview,
 setup, controls, and development information; commands and file paths are
-identical. The current in-game interface is in Simplified Chinese.
+identical. The game defaults to English. Use **EN / 中文** in the top bar or field
+manual to switch instantly; your choice is saved in this browser. Menus, combat
+messages, boss warnings, touch controls, and results support both languages.
+Switching languages preserves your current mission progress.
 
 This release contains one complete single-player browser mission. Multiplayer,
 gamepad support, and additional missions are outside its current scope.
