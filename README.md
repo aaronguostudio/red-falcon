@@ -1,14 +1,22 @@
-# 赤隼 · 断线行动
+# Red Falcon: Broken Signal
 
-**RED FALCON — OPERATION: BROKEN SIGNAL**
+[English](README.md) | [简体中文](README.zh-CN.md)
 
-原创的单人横版跑跳射击游戏，以经典动作游戏为灵感，重新设计第一关、角色、机械敌人与声音。浏览器原生 Canvas 2D + Web Audio，无运行时依赖，无远程素材请求。
+**An original browser run-and-gun game. One complete mission.**
 
-![赤隼：断线行动游戏画面](docs/preview.png)
+Fight through a rainforest, cross a broken bridge, and take down a mechanical
+guardian at a silent outpost. Inspired by classic side-scrolling action games,
+Red Falcon brings its own level, characters, mechanical enemies, and sound.
 
-## 运行
+Built with native Canvas 2D and Web Audio. No runtime dependencies or remote asset
+requests.
 
-需要 Node.js 20 或更新版本，以及现代浏览器。项目没有 npm 依赖，无需安装依赖即可运行。
+![Red Falcon: Broken Signal — title screen and mechanical guardian](docs/preview.png)
+
+## Quick start
+
+Requirements: **Node.js 20+** and a modern browser. No dependency installation is
+needed.
 
 ```sh
 git clone https://github.com/aaronguostudio/red-falcon.git
@@ -16,40 +24,76 @@ cd red-falcon
 npm run dev
 ```
 
-打开 [本地游戏](http://red-falcon.localhost:4177)。推荐桌面浏览器全屏游玩。
+Open [the local game](http://red-falcon.localhost:4177). A desktop browser in
+fullscreen gives the best view.
 
-`dist/` 直接存放 HTML、CSS 和 JavaScript 源码，不是生成的构建产物。将该目录发布到任意静态网站托管服务即可，无需构建。`.openai/hosting.json` 对应原站点的 Sites 配置；自行托管时不需要该配置。
+The `dist/` directory contains the HTML, CSS, and JavaScript source directly; it
+is not generated build output. Deploy that directory to any static host without
+a build step. `.openai/hosting.json` configures the original Sites deployment and
+is not needed for independent hosting.
 
-## 操作
+## Controls
 
-| 动作 | 键位 |
+| Action | Input |
 | --- | --- |
-| 移动 | A / D 或左右方向键 |
-| 二段跳 | 空格 / L |
-| 连射 | 按住 J；或鼠标左键瞄准射击 |
-| 上下瞄准 | W / S 或上下方向键 |
-| 无敌冲刺 | Shift / H |
-| 手雷 | K / 鼠标右键 |
-| 切换已解锁武器 | Q |
-| 暂停、声音、全屏 | Esc、M、F |
+| Move | A / D or Left / Right arrows |
+| Double jump | Space / L |
+| Continuous fire | Hold J, or aim and fire with the left mouse button |
+| Aim up / down | W / S or Up / Down arrows |
+| Invulnerable dash | Shift / H |
+| Throw a grenade | K / right mouse button |
+| Cycle unlocked weapons | Q |
+| Pause / sound / fullscreen | Esc / M / F |
 
-触屏设备提供虚拟按钮，建议横屏。标准与老兵难度分别保存本机最高分。
+Touch devices have on-screen controls; landscape orientation is recommended.
+Standard and Veteran difficulty each keep a separate best score in your browser.
 
-## 第一关
+## The first mission
 
-7,040 单位宽的连续关卡；雨林、断桥与前哨三个区域；四类普通敌人；步枪、散射炮、电磁步枪三种武器；三个自动检查点；两阶段钢铁守卫 Boss，包含扇形弹幕、标记轰炸与震荡波。计时、连杀积分、通关评级、失败续战、暂停及重新开始均可用。
+- One continuous, 7,040-unit level spanning the rainforest, broken bridge, and
+  forward outpost.
+- Four enemy types: soldiers, heavy troops, turrets, and drones.
+- Three weapons: Pulse Rifle, Swarm Shot, and Arc Railgun, plus grenades and
+  destructible supply crates.
+- Double jumps, invulnerable dashes, and three automatic checkpoints that restore
+  armor and grenade supplies.
+- A two-phase AEGIS–07 boss with fan-shaped volleys, marked bombardments, and
+  ground shockwaves.
+- Mission timing, combo scoring, completion ranks, checkpoint retries, and pause
+  and restart controls.
 
-程序绘制的分层雨林、废墟、角色与机械结构，粒子、冲刺残影、命中停顿、震屏、雨与光束。声音和节奏轨由 Web Audio 实时合成。开启系统减少动态效果时禁用震屏。
+The renderer draws the layered rainforest, ruins, characters, and machinery in
+code. Particles, dash trails, hit pauses, screen shake, rain, and light shafts
+bring the action to life. Web Audio synthesizes the sound effects and rhythm
+track. The system's reduced-motion preference disables screen shake.
 
-## 验证
+## Verify and develop
 
 ```sh
 npm run check
 npm test
 ```
 
-测试覆盖跳跃和冲刺、射击碰撞、武器拾取、手雷、检查点恢复、暂停、难度、Boss 阶段，以及只通过正常操作输入完成整关的模拟测试。
+The tests cover jumps and dashes, projectile collisions, weapon pickups,
+grenades, checkpoint recovery, pause behavior, difficulty, and boss phases. A
+complete-mission simulation reaches the ending using normal gameplay inputs.
 
-`game.js` 是与 DOM 无关的游戏模拟；`render.js` 负责绘制；`audio.js` 负责音频；`main.js` 负责输入与界面。只读的 `window.redFalcon.snapshot()` 提供调试状态，不含作弊或跳关接口。
+| File | Responsibility |
+| --- | --- |
+| [game.js](dist/src/game.js) | Game simulation, independent of the DOM |
+| [render.js](dist/src/render.js) | Canvas drawing and visual effects |
+| [audio.js](dist/src/audio.js) | Synthesized sound effects and music |
+| [main.js](dist/src/main.js) | Input handling and interface |
+| [game.test.mjs](tests/game.test.mjs) | Game logic and complete-mission tests |
 
-这是完整可通关的第一关浏览器版本。当前范围是单人游戏，不包含联机、手柄适配或后续关卡。
+The read-only `window.redFalcon.snapshot()` exposes game state for debugging. It
+does not provide cheats or level-skipping controls.
+
+## Languages and scope
+
+English is the primary repository language. Both READMEs cover the same overview,
+setup, controls, and development information; commands and file paths are
+identical. The current in-game interface is in Simplified Chinese.
+
+This release contains one complete single-player browser mission. Multiplayer,
+gamepad support, and additional missions are outside its current scope.
