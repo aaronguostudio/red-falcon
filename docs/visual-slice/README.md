@@ -1,5 +1,6 @@
 # Verdant Outpost: playable visual slice
 
+> Historical 2.1 prototype notes. The art now covers the full campaign; see the [2.2 implementation and measurements](../campaign-art/README.md).
 [30-second opening](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=intro) · [AEGIS–07 practice](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=boss)
 
 This prototype applies the approved art direction to a timed opening and a complete Guardian encounter. It is a separate practice mode within the eight-chapter game. The opening ends after 30 active simulation seconds, when the player is grounded; pausing freezes the timer. Retrying the opening restarts its timer. Boss practice replenishes armor, grenades and all three weapons. Practice results never call campaign completion or write campaign scores.

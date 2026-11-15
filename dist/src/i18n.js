@@ -6,9 +6,12 @@ export const LOCALE_STORAGE_KEY = 'red-falcon-language';
 // Keep each English / Simplified Chinese pair together when editing game copy.
 export const MESSAGES = {
   ...LEVEL_MESSAGES,
+  'art.loading': ['Preparing {name}…', '正在准备{name}…'],
+  'art.failed': ['The field equipment could not load. Check your connection and retry.', '作战装备未能加载，请检查网络后重试。'],
+  'art.retry': ['Retry loading', '重新加载'],
   'sample.hold': ['HOLD POSITION', '坚守阵地'],
-  'sample.entry': ['Play the new visual sample →','试玩新版画面样板 →'],
-  'sample.file': ['VISUAL SAMPLE / 01','画面升级样板 / 01'],
+  'sample.entry': ['Quick play · 30 seconds + Boss →','快速试玩 · 30 秒突入 + Boss →'],
+  'sample.file': ['FIELD TRAINING / 01','作战训练 / 01'],
   'sample.title': ['VERDANT\nOUTPOST','雨林前哨'],
   'sample.subtitle': ['RAIN. STEEL. RESISTANCE.','雨幕 · 钢铁 · 突围'],
   'sample.brief': ['Thirty seconds in the rainforest. Then face AEGIS–07.','在雨林里突入三十秒，然后直面 AEGIS–07。'],

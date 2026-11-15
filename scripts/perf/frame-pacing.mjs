@@ -7,7 +7,7 @@ try{
   await page.route('**/src/main.js',r=>r.fulfill({contentType:'application/javascript',body:''}));await page.goto(process.env.GAME_URL||'http://red-falcon.localhost:4177');
   const data=await page.evaluate(async sample=>{
    const [{Game},{Renderer},{createI18n}]=await Promise.all([import('./src/game.js'),import('./src/render.js'),import('./src/i18n.js')]);document.querySelectorAll('main>*:not(canvas)').forEach(e=>e.remove());
-   const g=new Game(),r=new Renderer(document.querySelector('canvas'),createI18n());if(sample){await r.loadSlice();r.sliceMode=true;g.startSample('boss');}else g.start();
+   const g=new Game({enhanced:sample}),r=new Renderer(document.querySelector('canvas'),createI18n());if(sample){await r.loadSlice();r.sliceMode=true;g.startSample('boss');}else g.start();
    // Controlled sustained firefight, not a playthrough: invulnerability avoids ending the measurement.
    g.player.x=6120;g.player.y=532;g.player.unlocked=[0,1,2];g.player.weapon=1;g.player.invuln=999;g.boss.hp=1e9;g.boss.maxHp=1e9;g.boss.active=true;g.enemies=[];g.camera=5900;
    let last=0;const intervals=[],cpu=[];let maxParticles=0;

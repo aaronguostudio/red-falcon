@@ -11,19 +11,22 @@
 
 基于浏览器原生 Canvas 2D 和 Web Audio，无运行时依赖。所有素材由游戏自身提供，无需第三方 CDN。
 
-![赤隼：断线行动——主界面与机械守卫](docs/preview.zh-CN.png)
+![赤隼——完整八关画面升级](docs/campaign-art/waterfall.webp)
 
-## 新版画面可玩样板
+## 新设计，覆盖完整八关
 
-**[试玩前 30 秒](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=intro)** · **[直接挑战 AEGIS–07](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=boss)**
+完整战役现已采用新版美术：细腻场景材质、八帧跑动、方向瞄准、蹲下射击、跳跃落地姿态与紧凑战斗 HUD。
+从雨林前哨到活体巢穴，每关均有独立背景、地形材质与动画 Boss；最终女王进入第三阶段时会切换狂暴外观。
 
-雨林废墟、潮湿金属与岩壁、八帧跑动、方向瞄准、跳跃落地姿态，以及带蓄力预警的守卫战。
-默认英文，可在右上角切换中文。突入段累计游玩 30 秒后，可进入 Boss 战；Boss 练习会补满护甲并解锁三种武器。样板与战役解锁和最高分分开。
+![最终巢穴——女王 Boss 战](docs/campaign-art/hive.webp)
 
-![新版画面样板——实际游玩画面](docs/visual-slice/preview.webp)
+角色图集共用，场景按关加载；切关释放上一关贴图，静态光照与地形缓存，仅绘制可见角色，战斗粒子上限为 240。
+网络加载失败可直接重试，无需刷新。[美术、浏览器验证与性能记录](docs/campaign-art/README.md)包含测试条件和设备验证范围。
 
-五张 WebP 图集共约 2 MB，仅在进入样板时加载。静态光照与地形使用缓存，只绘制可见角色，粒子上限为 240。
-[实现与性能实测](docs/visual-slice/README.md)记录了测试条件、结果与设备验证范围。
+**[快速试玩 · 前 30 秒](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=intro)** · **[练习 AEGIS–07](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=boss)**
+
+保留三十秒突入与第一关 Boss 练习。Boss 练习会补满护甲、解锁三种武器，不改变战役解锁和最高分。
+默认英文，可在右上角切换中文。
 
 ## 快速开始
 
@@ -55,7 +58,7 @@ npm run dev
 | 切换已解锁武器 | Q |
 | 暂停 / 声音 / 全屏 | Esc / M / F |
 
-蹲下时降低受击范围、原地保持脚底位置，并可射击。松开站起，按 K / 空格可直接从蹲姿起跳。样板与完整战役使用相同键位。
+蹲下时降低受击范围、原地保持脚底位置，并可射击。松开站起，按 K / 空格可直接从蹲姿起跳。训练与完整战役使用相同键位。
 
 触屏设备提供虚拟按钮（含按住蹲下），建议横屏。每关的标准与老兵难度分别保存最高分。
 通关后解锁下一关，也可通过 **选择关卡** 重玩已解锁关卡。浏览器允许存储时，
@@ -85,9 +88,9 @@ npm run dev
 - 每关独立计时、连杀积分、通关评级与检查点续战。
 - 关卡选择、逐关解锁与完整战役结局。
 
-场景、角色与机械结构均由程序绘制；每关都有独立配色、建筑、氛围与 Boss 造型。
+生成的 WebP 场景与精灵图集由 Canvas 渲染器组合；每关都有独立材质、建筑、氛围与 Boss 造型。
 粒子、冲刺残影、命中停顿、震屏与天气丰富战斗反馈。音效与节奏轨由 Web Audio
-实时合成。开启系统减少动态效果时禁用震屏。
+实时合成。开启系统减少动态效果时禁用震屏和环境天气粒子。
 
 ## 验证与开发
 
@@ -107,7 +110,9 @@ Boss 阶段。八关分别通过仅使用正常操作输入的完整通关模拟
 | [patterns.js](dist/src/patterns.js) | Boss 攻击模式与危险区域碰撞 |
 | [progress.js](dist/src/progress.js) | 浏览器内的解锁进度与最高分 |
 | [render.js](dist/src/render.js) | Canvas 绘制与视觉效果 |
-| [scenes.js](dist/src/scenes.js) | 各关场景、环境效果与 Boss 绘制 |
+| [slice-renderer.js](dist/src/slice-renderer.js) | 完整战役与训练的新画面、精灵定位和地形缓存 |
+| [campaign-art.js](dist/src/campaign-art.js) | 按关加载、取消过期请求与贴图释放 |
+| [scenes.js](dist/src/scenes.js) | 危险预警与保留的程序绘制对照实现 |
 | [audio.js](dist/src/audio.js) | 合成音效与音乐 |
 | [i18n.js](dist/src/i18n.js) | 中英文文案与语言偏好保存 |
 | [main.js](dist/src/main.js) | 输入处理与界面 |

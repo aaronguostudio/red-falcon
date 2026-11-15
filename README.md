@@ -14,25 +14,28 @@ characters, bosses, and sound.
 Built with native Canvas 2D and Web Audio. No runtime dependencies. All assets
 are served by the game itself; no third-party CDNs are required.
 
-![Red Falcon: Broken Signal — title screen and mechanical guardian](docs/preview.png)
+![Red Falcon — the upgraded eight-chapter campaign](docs/campaign-art/waterfall.webp)
 
-## New visual sample
+## The new art, across all eight chapters
 
-**[Play the 30-second opening](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=intro)** · **[Challenge AEGIS–07](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=boss)**
+The full campaign now uses the approved visual direction: textured environments,
+eight-frame running, directional aiming, crouching, jump/landing poses and compact
+combat HUDs. Each chapter has a dedicated backdrop, terrain material and animated
+boss, from the rain-soaked outpost to the living nest. The final Queen changes
+appearance in her third phase.
 
-A playable art-and-motion prototype: rain-soaked jungle ruins, textured terrain,
-eight-frame running, directional aiming, jump/landing poses and a telegraphed
-Guardian encounter. English by default, with Chinese available in the top bar.
-The opening runs for 30 active seconds before offering the boss fight. Boss
-practice starts with full armor and all three weapons. Practice does not change
-campaign unlocks or records.
+![The Hollow Signal — final boss](docs/campaign-art/hive.webp)
 
-![Visual sample — live gameplay](docs/visual-slice/preview.webp)
+Shared character atlases load once; scenery loads by chapter. Previous chapter
+bitmaps are released, static lighting and terrain are cached, off-screen actors
+are culled, and combat particles are capped at 240. Failed downloads can be retried
+without refreshing. See [art, browser verification and performance](docs/campaign-art/README.md).
 
-The five WebP atlases load only for the sample (about 2 MB). Static lighting and
-terrain are cached, off-screen actors are culled, and particles are capped at
-240. See the [implementation and measured performance](docs/visual-slice/README.md)
-for methods, results and device limitations.
+**[Quick play · 30 seconds](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=intro)** · **[Practice AEGIS–07](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=boss)**
+
+The short field test and first-boss practice remain available. Boss practice starts
+with full armor and all three weapons, and does not change campaign unlocks or
+records. English is the default; switch to Chinese in the top bar.
 
 ## Quick start
 
@@ -69,7 +72,7 @@ is not needed for independent hosting.
 
 Crouching lowers the hitbox, keeps your feet planted and allows firing. Release
 to stand; K / Space jumps immediately out of the crouch. The bindings apply to
-both the visual sample and the campaign.
+both training and the campaign.
 
 Touch devices have on-screen controls, including a hold-to-crouch button; landscape orientation is recommended.
 Standard and Veteran difficulty keep separate best scores for each chapter.
@@ -103,11 +106,11 @@ charged beams, crossfire, spirals, low barrages, and summoned drones.
 - Per-chapter timing, combo scoring, completion ranks, and checkpoint retries.
 - Chapter selection, sequential unlocks, and a complete campaign ending.
 
-Scenery, characters, and machinery are drawn in code. Each chapter has its own
-palette, architecture, atmosphere, and boss silhouette. Particles, dash trails,
+Generated WebP scenery and sprite atlases are composed by the Canvas renderer.
+Each chapter has its own materials, architecture, atmosphere, and boss silhouette. Particles, dash trails,
 hit pauses, screen shake, and weather bring the action to life. Web Audio
 synthesizes the sound effects and rhythm track. The system's reduced-motion
-preference disables screen shake.
+preference disables screen shake and ambient weather particles.
 
 ## Verify and develop
 
@@ -129,7 +132,9 @@ blocked storage, chapter transitions, and the final boss phases.
 | [patterns.js](dist/src/patterns.js) | Boss attack patterns and hazard collisions |
 | [progress.js](dist/src/progress.js) | Browser-local chapter unlocks and best scores |
 | [render.js](dist/src/render.js) | Canvas drawing and visual effects |
-| [scenes.js](dist/src/scenes.js) | Chapter scenery, environmental effects, and boss art |
+| [slice-renderer.js](dist/src/slice-renderer.js) | Enhanced campaign and training renderer, sprite registration and cached terrain |
+| [campaign-art.js](dist/src/campaign-art.js) | Per-chapter assets, cancellation and bitmap lifetime |
+| [scenes.js](dist/src/scenes.js) | Hazard telegraphs and retained procedural comparison renderer |
 | [audio.js](dist/src/audio.js) | Synthesized sound effects and music |
 | [i18n.js](dist/src/i18n.js) | English / Simplified Chinese copy and saved language preference |
 | [main.js](dist/src/main.js) | Input handling and interface |

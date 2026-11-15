@@ -11,7 +11,7 @@ try {
   const result=await page.evaluate(async({sample,viewport})=>{
    const [{Game},{Renderer},{createI18n}]=await Promise.all([import('./src/game.js'),import('./src/render.js'),import('./src/i18n.js')]);
    document.querySelectorAll('main>*:not(canvas)').forEach(e=>e.remove());
-   const game=new Game({random:()=>.5}),renderer=new Renderer(document.querySelector('canvas'),createI18n());
+   const game=new Game({random:()=>.5,enhanced:sample}),renderer=new Renderer(document.querySelector('canvas'),createI18n());
    if(sample)await renderer.loadSlice();
    const cases=[];
    for(const [name,x] of [['opening',400],['traversal',1550],['boss',6200]]){

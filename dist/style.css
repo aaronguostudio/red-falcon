@@ -57,18 +57,28 @@ h1 .title-caption{font-weight:700}.subtitle b{font-weight:400}.mission-details s
 .visual-slice .hero h1{font-size:clamp(52px,6.8vw,96px);letter-spacing:0;line-height:.92}
 .visual-slice:lang(zh-CN) .hero h1{font-size:clamp(52px,6.2vw,88px)}
 .visual-slice .subtitle small{display:none}.visual-slice .menu{background:linear-gradient(90deg,#04171ff2 0%,#04171fc9 34%,#04171f20 76%)}
-.visual-slice .grain{display:none}.visual-slice button:disabled{opacity:.45;cursor:wait}
-.visual-slice.in-field .topbar{height:46px;justify-content:flex-end;padding:0 20px;background:transparent;border:0}
-.visual-slice.in-field .brand{display:none}.visual-slice.in-field .language-switch{height:28px}.visual-slice.in-field .icon-btn{width:28px;height:28px}
-.visual-slice .player-hud{top:25px;left:28px;width:180px;padding:10px 14px;background:#071c25b0;border-left:2px solid #e0eac0}
-.visual-slice .hud-caption b{font-size:11px}.visual-slice #health-bar{margin:7px 0;height:5px}.visual-slice .hud-bottom{font-size:9px}
-.visual-slice .objective{top:24px;width:340px}.visual-slice .objective strong{font-size:10px;line-height:1.6;margin:6px 0}.visual-slice .objective>span{font-size:9px;letter-spacing:1px}
-.visual-slice .score-hud{top:60px;right:28px}.visual-slice .score-hud strong{font-size:20px;margin:4px 0}.visual-slice .score-hud>span{font-size:8px}
-.visual-slice #boss-hud{top:103px;width:390px;padding:8px 14px;background:#061b23a0}.visual-slice #boss-hud strong{font-size:11px}
-.visual-slice .weapon-hud{bottom:22px;right:28px;min-width:190px;background:#071b236b;padding:8px 12px;border-top-color:#c1d9ca60}
-.visual-slice .weapon-hud strong{font-size:13px;margin:5px 0}.visual-slice .weapon-hud small{font-size:9px}
-.visual-slice .keyboard-hint{bottom:30px;left:28px}.visual-slice #sector-banner{display:none}.visual-slice #notification{bottom:100px;padding:8px 14px;font-size:10px;background:#081e27c9}
-@media(max-width:700px){.visual-slice .hero{width:85%;top:18%}.visual-slice .hero h1{font-size:56px}.visual-slice .objective{top:132px;width:240px}.visual-slice #boss-hud{top:198px;width:80%}.visual-slice .player-hud{left:16px;top:54px;width:145px}.visual-slice .score-hud{right:16px;top:62px}.visual-slice .weapon-hud{bottom:95px}}
-@media(max-height:500px){.visual-slice .hero{top:13%;width:65%}.visual-slice .hero h1{font-size:42px;margin:10px 0}.visual-slice .hero .title-caption{font-size:8px;margin-top:10px}.visual-slice .hero .subtitle{font-size:10px;margin:8px 0}.visual-slice #slice-menu small{margin-top:6px;font-size:8px}.visual-slice #slice-menu>a{margin-top:9px;font-size:10px}.visual-slice #sample-boss{margin-top:6px;padding:7px 0}.visual-slice .player-hud{top:15px;left:15px;width:145px;padding:7px 10px}.visual-slice .objective{top:19px;width:270px}.visual-slice .objective strong{display:none}.visual-slice .score-hud{top:46px;right:20px}.visual-slice #boss-hud{top:57px;width:300px;padding:5px 10px}.visual-slice .keyboard-hint{bottom:16px;font-size:8px}.visual-slice .weapon-hud{bottom:16px;min-width:150px}.visual-slice #notification{bottom:76px}.visual-slice .top-actions{gap:3px}}
-@media(hover:none),(pointer:coarse){.visual-slice .weapon-hud{bottom:84px;right:18px}.visual-slice .weapon-hud small{display:none}.visual-slice .weapon-hud strong{margin:3px 0}.visual-slice .weapon-hud>span{font-size:8px}.visual-slice .weapon-hud{min-width:150px;padding:5px 8px}.visual-slice #notification{bottom:137px}}
-@media(max-height:500px) and (pointer:coarse){.visual-slice #notification{top:102px;bottom:auto}.visual-slice .weapon-hud{bottom:8px;left:190px;right:auto;width:165px;min-width:0}}
+.enhanced-art .grain{display:none}.enhanced-art button:disabled{opacity:.45;cursor:wait}
+.enhanced-art.in-field .topbar{height:46px;justify-content:flex-end;padding:0 20px;background:transparent;border:0}
+.enhanced-art.in-field .brand{display:none}.enhanced-art.in-field .language-switch{height:28px}.enhanced-art.in-field .icon-btn{width:28px;height:28px}
+.enhanced-art .player-hud{top:25px;left:28px;width:180px;padding:10px 14px;background:#071c25b0;border-left:2px solid #e0eac0}
+.enhanced-art .hud-caption b{font-size:11px}.enhanced-art #health-bar{margin:7px 0;height:5px}.enhanced-art .hud-bottom{font-size:9px}
+.enhanced-art .objective{top:24px;width:340px}.enhanced-art .objective strong{font-size:10px;line-height:1.6;margin:6px 0}.enhanced-art .objective>span{font-size:9px;letter-spacing:1px}
+.enhanced-art .score-hud{top:60px;right:28px}.enhanced-art .score-hud strong{font-size:20px;margin:4px 0}.enhanced-art .score-hud>span{font-size:8px}
+.enhanced-art #boss-hud{top:103px;width:390px;padding:8px 14px;background:#061b23a0}.enhanced-art #boss-hud strong{font-size:11px}
+.enhanced-art .weapon-hud{bottom:22px;right:28px;min-width:190px;background:#071b236b;padding:8px 12px;border-top-color:#c1d9ca60}
+.enhanced-art .weapon-hud strong{font-size:13px;margin:5px 0}.enhanced-art .weapon-hud small{font-size:9px}
+.enhanced-art .keyboard-hint{bottom:30px;left:28px}.visual-slice #sector-banner{display:none}.enhanced-art #notification{bottom:100px;padding:8px 14px;font-size:10px;background:#081e27c9}
+@media(max-width:700px){.visual-slice .hero{width:85%;top:18%}.visual-slice .hero h1{font-size:56px}.enhanced-art .objective{top:132px;width:240px}.enhanced-art #boss-hud{top:198px;width:80%}.enhanced-art .player-hud{left:16px;top:54px;width:145px}.enhanced-art .score-hud{right:16px;top:62px}.enhanced-art .weapon-hud{bottom:95px}}
+@media(max-height:500px){.visual-slice .hero{top:13%;width:65%}.visual-slice .hero h1{font-size:42px;margin:10px 0}.visual-slice .hero .title-caption{font-size:8px;margin-top:10px}.visual-slice .hero .subtitle{font-size:10px;margin:8px 0}.visual-slice #slice-menu small{margin-top:6px;font-size:8px}.visual-slice #slice-menu>a{margin-top:9px;font-size:10px}.visual-slice #sample-boss{margin-top:6px;padding:7px 0}.enhanced-art .player-hud{top:15px;left:15px;width:145px;padding:7px 10px}.enhanced-art .objective{top:19px;width:270px}.enhanced-art .objective strong{display:none}.enhanced-art .score-hud{top:46px;right:20px}.enhanced-art #boss-hud{top:57px;width:300px;padding:5px 10px}.enhanced-art .keyboard-hint{bottom:16px;font-size:8px}.enhanced-art .weapon-hud{bottom:16px;min-width:150px}.enhanced-art #notification{bottom:76px}.enhanced-art .top-actions{gap:3px}}
+@media(hover:none),(pointer:coarse){.enhanced-art .weapon-hud{bottom:84px;right:18px}.enhanced-art .weapon-hud small{display:none}.enhanced-art .weapon-hud strong{margin:3px 0}.enhanced-art .weapon-hud>span{font-size:8px}.enhanced-art .weapon-hud{min-width:150px;padding:5px 8px}.enhanced-art #notification{bottom:137px}}
+@media(max-height:500px) and (pointer:coarse){.enhanced-art #notification{top:102px;bottom:auto}.enhanced-art .weapon-hud{bottom:8px;left:190px;right:auto;width:165px;min-width:0}}
+
+/* Asset recovery stays outside mission overlays and never starts the clock early. */
+#asset-status{position:absolute;z-index:15;left:50%;bottom:22px;transform:translateX(-50%);max-width:calc(100% - 32px);padding:12px 18px;background:#071a24f0;border:1px solid #96bdab55;box-shadow:0 8px 24px #0005;display:flex;gap:14px;align-items:center;font:11px/1.6 var(--mono);color:#d7e8d5}
+#asset-retry{padding:7px 12px;white-space:nowrap;border:1px solid var(--accent);color:var(--accent)}
+.enhanced-art #sector-banner{top:155px;left:28px;transform:none;text-align:left;padding:10px 14px;background:#061b23b3;border-left:2px solid #b9d4b5;max-width:330px}
+.enhanced-art #sector-banner strong{font-size:22px;letter-spacing:1px;margin:5px 0}.enhanced-art #sector-banner>span{font-size:10px;letter-spacing:.3px}.enhanced-art #sector-banner small{font-size:9px}
+@media(max-height:500px){.enhanced-art #sector-banner{top:96px;left:15px;max-width:260px}.enhanced-art #sector-banner strong{font-size:16px}.enhanced-art #sector-banner>span{display:none}#asset-status{bottom:8px;padding:8px 12px;font-size:10px}}
+@media(max-width:700px) and (min-height:501px){.enhanced-art #sector-banner{top:250px;left:16px;max-width:260px}.enhanced-art #sector-banner strong{font-size:18px}}
+
+.enhanced-art.in-field .top-code{display:none}

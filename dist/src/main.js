@@ -11,9 +11,10 @@ let storage=null;
 try { storage=window.localStorage; } catch { /* Storage is optional. */ }
 const progress=createProgress(storage);
 const sampleParam=new URLSearchParams(location.search).get('sample'),sampleMode=['intro','boss'].includes(sampleParam);
-let sampleChoice=sampleMode?sampleParam:'intro',assetsReady=false;
+let sampleChoice=sampleMode?sampleParam:'intro',assetsReady=false,assetState='loading',assetRequest=0,startIntent=0,pendingLaunch=false;
 const frameMetrics=new FrameMetrics();
 document.body.classList.toggle('visual-slice',sampleMode);
+document.body.classList.add('enhanced-art');
 let selectedLevel=sampleMode?0:progress.unlocked;
 const i18n=createI18n(storage),t=(key,params)=>i18n.t(key,params);
 let renderer,game,last=0,hudClock=0,noticeTimeout,bannerTimeout,hintTimeout;
@@ -25,7 +26,7 @@ const formatTime=s=>`${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor
 
 function selectLevel(index){
   if(!progress.isOpen(index))return;
-  selectedLevel=index;game.setLevel(index);game.populate(0);game.player=game.makePlayer(120);game.sector=0;activeSector=0;game.maxX=120;game.clearEffects();renderCampaign();
+  startIntent++;pendingLaunch=false;selectedLevel=index;game.setLevel(index);game.populate(0);game.player=game.makePlayer(120);game.sector=0;activeSector=0;game.maxX=120;game.clearEffects();renderCampaign();if(renderer)prepareAssets(index);
 }
 function renderCampaign(){
   const level=LEVELS[selectedLevel],number=String(selectedLevel+1).padStart(2,'0');
@@ -80,6 +81,7 @@ function applyLanguage(){
   if(activeNotice)$('notification').textContent=i18n.text(activeNotice);
   if(game){renderCampaign();updateHUD();if(game.state==='victory')renderResults();}
   if(sampleMode)renderSampleMenu();
+  updateAssetStatus();
 }
 function renderSampleMenu(){
   const set=(key,value)=>document.querySelector(`[data-i18n="${key}"]`).textContent=t(value);
@@ -88,10 +90,25 @@ function renderSampleMenu(){
   $('sample-boss').textContent=t(sampleChoice==='boss'?'sample.start':'sample.boss');
   $('slice-menu').classList.remove('hidden');$('slice-loading').textContent=t(assetsReady?'sample.loaded':'sample.loading');
 }
-async function loadSample(){
-  $('start').disabled=true;$('sample-boss').disabled=true;
-  try{await renderer.loadSlice();assetsReady=true;renderer.sliceMode=true;renderSampleMenu();$('start').disabled=false;$('sample-boss').disabled=false;}
-  catch(error){$('slice-loading').textContent=t('sample.failed');console.error('Sample textures failed to load',error);}
+function updateAssetStatus(){
+  for(const id of ['start','sample-boss','next-chapter','replay'])$(id).disabled=!assetsReady;
+  $('asset-status').classList.toggle('hidden',assetsReady);
+  $('asset-message').textContent=t(assetState==='error'?'art.failed':'art.loading',{name:{key:LEVELS[selectedLevel].nameKey}});
+  $('asset-retry').classList.toggle('hidden',assetState!=='error');
+  $('asset-retry').textContent=t('art.retry');
+  if(sampleMode)$('slice-loading').textContent=t(assetsReady?'sample.loaded':assetState==='error'?'art.failed':'sample.loading');
+}
+async function prepareAssets(index){
+  if(assetsReady&&renderer.readyLevel===index)return true;
+  const request=++assetRequest;assetsReady=false;assetState='loading';clearInput();updateAssetStatus();
+  try{
+    await renderer.loadLevel(index);
+    if(request!==assetRequest||selectedLevel!==index)return false;
+    assetsReady=renderer.readyLevel===index;assetState='ready';updateAssetStatus();return assetsReady;
+  }catch(error){
+    if(request!==assetRequest||error.name==='AbortError')return false;
+    assetState='error';updateAssetStatus();console.error('Chapter textures failed to load',error);return false;
+  }
 }
 function beginSample(mode){
   if(!assetsReady)return;sampleChoice=mode;clearInput();game.difficulty=difficulty;game.startSample(mode);frameMetrics.reset();showState();canvas.focus();audio.init();updateHUD();
@@ -127,7 +144,10 @@ function event(e){
     case'sampleReady':showState();break;
   }
 }
-function start(){
+async function start(){
+  const intent=++startIntent,index=selectedLevel;pendingLaunch=true;
+  if(!await prepareAssets(index)||intent!==startIntent)return;
+  pendingLaunch=false;
   if(sampleMode){beginSample(sampleChoice);return;}
   frameMetrics.reset();
   clearInput();game.difficulty=difficulty;game.start(selectedLevel);showState();canvas.focus();audio.init();
@@ -136,7 +156,7 @@ function start(){
   else hintTimeout=setTimeout(()=>{if(game.state==='playing'&&game.maxX<900)notice({key:'notice.controls'});},4000);
   updateHUD();
 }
-function menu(){game.state='menu';clearInput();selectLevel(sampleMode?0:progress.unlocked);if(sampleMode)renderSampleMenu();showState();$('boss-hud').classList.add('hidden');}
+function menu(){startIntent++;pendingLaunch=false;game.state='menu';clearInput();selectLevel(sampleMode?0:progress.unlocked);if(sampleMode)renderSampleMenu();showState();$('boss-hud').classList.add('hidden');}
 function retry(){frameMetrics.reset();game.retry();clearInput();showState();canvas.focus();updateHUD();}
 function pause(){game.pause();clearInput();if(game.state==='playing')canvas.focus();}
 function renderResults(){
@@ -209,6 +229,7 @@ async function fullScreen(){try{if(document.fullscreenElement)await document.exi
 $('open-chapters').onclick=()=>{renderCampaign();$('chapters').showModal();};
 $('close-chapters').onclick=()=>$('chapters').close();
 $('next-chapter').onclick=()=>{if(sampleMode){beginSample('boss');return;}if(game.state!=='victory'||!progress.isOpen(game.levelIndex+1))return;selectedLevel=game.levelIndex+1;start();};
+$('asset-retry').onclick=()=>pendingLaunch?start():prepareAssets(selectedLevel);
 $('start').onclick=start;$('replay').onclick=()=>sampleMode?beginSample('intro'):start();$('resume').onclick=pause;$('pause').onclick=pause;$('restart').onclick=retry;$('retry').onclick=retry;
 for(const id of ['exit','death-exit','victory-exit'])$(id).onclick=menu;
 $('sample-boss').onclick=()=>beginSample(sampleChoice==='boss'?'intro':'boss');$('sample-enterboss').onclick=()=>beginSample('boss');$('sample-restart').onclick=()=>beginSample('intro');
@@ -222,8 +243,8 @@ window.addEventListener('resize',()=>renderer?.resize());
 document.addEventListener('fullscreenchange',()=>{updateFullscreenLabel();renderer?.resize();});
 
 try{
-  game=new Game({onEvent:event,level:selectedLevel});applyLanguage();renderer=new Renderer(canvas,i18n,{slice:sampleMode});if(sampleMode)loadSample();
-  Object.defineProperty(window,'redFalcon',{value:Object.freeze({snapshot:()=>({...game.snapshot(),locale:i18n.locale}),get metrics(){return{width:renderer.width,height:renderer.height,scale:renderer.scale,particles:game.particles.length,sampleAssetsReady:assetsReady,renderScale:sampleMode?1.2:1,terrainCachePixels:renderer.slice?.cachedPixels||0,...frameMetrics.snapshot()};}})});
+  game=new Game({onEvent:event,level:selectedLevel});applyLanguage();renderer=new Renderer(canvas,i18n,{slice:true});prepareAssets(selectedLevel);
+  Object.defineProperty(window,'redFalcon',{value:Object.freeze({snapshot:()=>({...game.snapshot(),locale:i18n.locale}),get metrics(){return{width:renderer.width,height:renderer.height,scale:renderer.scale,particles:game.particles.length,sampleAssetsReady:assetsReady,assetsReady,readyLevel:renderer.readyLevel,artTheme:renderer.slice?.theme||null,retainedTextureBytes:renderer.slice?.retainedBytes||0,renderScale:1.2,terrainCachePixels:renderer.slice?.cachedPixels||0,...frameMetrics.snapshot()};}})});
   function frame(time){
     try{
       const interval=time-last,begin=performance.now();const dt=Math.min(interval/1000||.016,.034);last=time;

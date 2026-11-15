@@ -1,4 +1,4 @@
-// Procedural chapter scenery and boss silhouettes. No network assets are needed.
+// Shared hazard indicators and the retained procedural renderer for comparisons.
 const TAU=Math.PI*2;
 const rect=(c,x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(x,y,w,h);};
 const line=(c,x,y,xx,yy,color,w=1)=>{c.strokeStyle=color;c.lineWidth=w;c.beginPath();c.moveTo(x,y);c.lineTo(xx,yy);c.stroke();};

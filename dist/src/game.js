@@ -12,8 +12,8 @@ export const WEAPONS = [
 ];
 export const SECTORS=LEVELS[0].sectors, PLATFORMS=LEVELS[0].platforms;
 export class Game {
-  constructor({onEvent=()=>{},difficulty='normal',random=Math.random,level=0}={}) {
-    this.sample=null;this.setLevel(level);this.onEvent=onEvent;this.random=random;this.difficulty=difficulty;this.state='menu';this.time=0;this.visualTime=0;
+  constructor({onEvent=()=>{},difficulty='normal',random=Math.random,level=0,enhanced=true}={}) {
+    this.enhanced=enhanced;this.sample=null;this.setLevel(level);this.onEvent=onEvent;this.random=random;this.difficulty=difficulty;this.state='menu';this.time=0;this.visualTime=0;
     this.checkpoint=0;this.deaths=0;this.score=0;this.kills=0;this.maxX=100;this.sector=0;
     this.particles=[];this.bullets=[];this.grenades=[];this.hazards=[];this.rings=[];this.texts=[];this.ghosts=[];
     this.shake=0;this.flash=0;this.hitstop=0;this.camera=0;this.combo=0;this.comboTime=0;
@@ -43,7 +43,7 @@ export class Game {
   clearEffects(){this.bullets=[];this.grenades=[];this.hazards=[];this.particles=[];this.rings=[];this.texts=[];this.ghosts=[];this.shake=0;this.flash=0;this.hitstop=0;this.combo=0;this.comboTime=0;}
   retry(){if(this.sample==='intro'){const deaths=this.deaths+1;this.startSample('intro');this.deaths=deaths;return;}if(this.sample==='boss'){this.deaths++;this.enterSampleBoss();return;}const saved=this.player.unlocked.slice();this.deaths++;this.score=Math.max(0,this.score-300);this.player=this.makePlayer(this.checkpoint||120);this.player.unlocked=saved;this.player.weapon=saved.at(-1);this.populate(this.checkpoint);this.clearEffects();this.state='playing';this.camera=clamp(this.player.x-300,0,this.world-W);this.emit('notice',{message:{key:'notice.retry'}});}
   pause(){if(this.state==='playing'){this.state='paused';this.emit('pause');}else if(this.state==='paused'){this.state='playing';this.emit('resume');}}
-  fx(x,y,count,color,speed=180){for(let i=0;i<count;i++){const a=this.random()*Math.PI*2,v=(.2+this.random())*speed;this.particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-40,life:.2+this.random()*.5,max:.7,r:1.4+this.random()*3,color});}const limit=this.sample?240:700;if(this.particles.length>limit)this.particles.splice(0,this.particles.length-limit);}
+  fx(x,y,count,color,speed=180){for(let i=0;i<count;i++){const a=this.random()*Math.PI*2,v=(.2+this.random())*speed;this.particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-40,life:.2+this.random()*.5,max:.7,r:1.4+this.random()*3,color});}const limit=this.enhanced?240:700;if(this.particles.length>limit)this.particles.splice(0,this.particles.length-limit);}
   ring(x,y,color,r=90){this.rings.push({x,y,color,r,life:.35});}
   floating(x,y,text,color='#e4f69e'){this.texts.push({x,y,text,color,life:1.1});}
   update(dt,input={held:new Set(),pressed:new Set(),aim:null}){
@@ -54,7 +54,7 @@ export class Game {
     this.comboTime-=dt;if(this.comboTime<0)this.combo=0;
     this.updatePlayer(dt,input);if(this.state!=='playing')return;
     this.updateEnvironment();this.updateEnemies(dt);this.updateBoss(dt);updateHazards(this,dt);this.updateBullets(dt);this.updateGrenades(dt);this.updatePickups(dt);this.updateEffects(dt);
-    const p=this.player;this.maxX=Math.max(this.maxX,p.x);const target=this.sample?clamp(p.x-250,this.boss.active?5900:0,this.world-W/SLICE_ZOOM):clamp(p.x-W*.32,0,this.world-W);this.camera=lerp(this.camera,target,1-Math.exp(-dt*5));
+    const p=this.player;this.maxX=Math.max(this.maxX,p.x);const target=this.enhanced?clamp(p.x-250,this.boss.active?this.boss.arena:0,this.world-W/SLICE_ZOOM):clamp(p.x-W*.32,0,this.world-W);this.camera=lerp(this.camera,target,1-Math.exp(-dt*5));
     const sector=this.sectors.reduce((index,s,i)=>this.maxX>=s.x?i:index,0);if(sector>this.sector){this.sector=sector;this.emit('sector',{sector});}
     if(this.sample==='intro'){
       if(this.time>=30&&p.grounded){this.state='sample-ready';this.emit('sampleReady');return;}
@@ -66,7 +66,7 @@ export class Game {
     const p=this.player;if(p.crouching===crouching)return;
     const feet=p.y+p.h;p.crouching=crouching;p.h=crouching?36:58;p.y=feet-p.h;
   }
-  playerOrigin(){const p=this.player;return this.sample?falconOrigin(p):{x:p.x+14,y:p.y+p.h-(p.crouching?17:36)};}
+  playerOrigin(){const p=this.player;return this.enhanced?falconOrigin(p):{x:p.x+14,y:p.y+p.h-(p.crouching?17:36)};}
   updatePlayer(dt,input){
     const p=this.player,h=input.held||new Set(),k=input.pressed||new Set(),has=(...ks)=>ks.some(v=>h.has(v)),press=(...ks)=>ks.some(v=>k.has(v));
     p.invuln-=dt;p.fire-=dt;p.dashCd-=dt;p.grenadeCd-=dt;p.muzzle-=dt;p.land=Math.max(0,p.land-dt*5);p.coyote-=dt;p.jumpBuffer-=dt;
@@ -85,7 +85,7 @@ export class Game {
     const prevBottom=p.y+p.h;
     const belt=p.grounded?this.platforms.find(s=>s.conveyor&&p.x+p.w>s.x&&p.x<s.x+s.w&&Math.abs(prevBottom-s.y)<3)?.conveyor||0:0;
     p.x+=(p.vx+belt)*dt;p.x=clamp(p.x,this.boss.active?this.boss.arena:20,this.sample==='intro'?SLICE_END:this.world-80);p.y+=p.vy*dt;p.grounded=false;
-    for(const s of this.platforms){if(p.vy>=0&&p.x+p.w>s.x&&p.x<s.x+s.w&&prevBottom<=s.y+2&&p.y+p.h>=s.y){p.y=s.y-p.h;p.vy=0;p.grounded=true;p.coyote=.11;p.jumps=0;if(prevBottom<s.y-6){p.land=.6;if(this.sample)this.emit('land');this.fx(p.x+14,s.y,9,'#708c78',90);}}}
+    for(const s of this.platforms){if(p.vy>=0&&p.x+p.w>s.x&&p.x<s.x+s.w&&prevBottom<=s.y+2&&p.y+p.h>=s.y){p.y=s.y-p.h;p.vy=0;p.grounded=true;p.coyote=.11;p.jumps=0;if(prevBottom<s.y-6){p.land=.6;if(this.enhanced)this.emit('land');this.fx(p.x+14,s.y,9,'#708c78',90);}}}
     if(p.y>H+80){this.damagePlayer(30,true);if(this.state==='playing'){p.x=this.checkpoint||120;p.y=440;p.vx=0;p.vy=0;p.invuln=2;this.camera=clamp(p.x-300,0,this.world-W);this.emit('notice',{message:{key:'notice.fall'}});}}
     this.setCrouching(wantsCrouch&&p.grounded&&p.dash<=0&&p.jumpBuffer<=0);
     p.step+=Math.abs(p.vx)*dt*.04;
@@ -100,7 +100,7 @@ export class Game {
   }
   firePlayer(){
     const p=this.player,w=WEAPONS[p.weapon];p.fire=w.rate;p.muzzle=.06;this.stats.shots++;
-    const origin=this.playerOrigin(),barrel=this.sample?falconBarrel(p):34;
+    const origin=this.playerOrigin(),barrel=this.enhanced?falconBarrel(p):34;
     const spread=p.weapon===1?[-.23,-.115,0,.115,.23]:[0];
     for(const offset of spread){const a=p.aim+offset;this.bullets.push({x:origin.x+Math.cos(a)*barrel,y:origin.y+Math.sin(a)*barrel,vx:Math.cos(a)*w.speed,vy:Math.sin(a)*w.speed,life:1.1,damage:w.damage,player:true,color:w.color,rail:p.weapon===2,hit:new Set(),r:p.weapon===2?5:3});}
     this.fx(origin.x+Math.cos(p.aim)*barrel,origin.y+Math.sin(p.aim)*barrel,2,w.color,80);this.emit('shoot',{weapon:p.weapon});

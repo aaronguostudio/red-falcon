@@ -3,7 +3,8 @@ const overlaps=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 
 export function runBossAttack(game,pattern){
   const b=game.boss,p=game.player,phase=b.phase;
-  const x=game.sample?b.x-64:b.x+b.w*.35,y=game.sample?b.y+137:b.y+b.h*.5;
+  const guardian=game.enhanced&&b.kind==='guardian';
+  const x=guardian?b.x-64:b.x+b.w*.35,y=guardian?b.y+137:b.y+b.h*.5;
   const aimed=Math.atan2(p.y+25-y,p.x+14-x);
   const shot=(a,speed=270,r=7)=>game.enemyShot(x,y,a,speed,r);
   const mortar=(tx,delay)=>game.hazards.push({type:'mortar',x:clamp(tx,b.arena+30,game.world-140),y:590,timer:delay,hit:false,life:delay+.8});

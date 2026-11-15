@@ -1,0 +1,76 @@
+{
+  "note": "All chapters unlocked in a disposable browser profile; boss positions and victory transitions are controlled visual/UI fixtures, not playthrough evidence.",
+  "results": [
+    {
+      "chapter": 1,
+      "theme": "jungle",
+      "retainedTextureBytes": 35473880,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 2,
+      "theme": "base",
+      "retainedTextureBytes": 37253052,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 3,
+      "theme": "waterfall",
+      "retainedTextureBytes": 36723472,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 4,
+      "theme": "foundry",
+      "retainedTextureBytes": 37089520,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 5,
+      "theme": "snow",
+      "retainedTextureBytes": 37280808,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 6,
+      "theme": "rail",
+      "retainedTextureBytes": 36897552,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 7,
+      "theme": "reactor",
+      "retainedTextureBytes": 37221948,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 8,
+      "theme": "hive",
+      "retainedTextureBytes": 38718012,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 1,
+      "theme": "jungle",
+      "retainedTextureBytes": 35473880,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 8,
+      "theme": "hive",
+      "retainedTextureBytes": 38718012,
+      "terrainCachePixels": 187520
+    },
+    {
+      "chapter": 2,
+      "theme": "base",
+      "retainedTextureBytes": 37253052,
+      "terrainCachePixels": 187520
+    }
+  ],
+  "textureRecovery": true,
+  "staleSelectionCancelled": true,
+  "nextChapterRecovery": true,
+  "stalledDownloadTimeout": true,
+  "errors": []
+}
