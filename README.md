@@ -4,11 +4,12 @@
 
 **[Play online](https://red-falcon-broken-signal.arronstudio.chatgpt.site)** — Open in your browser and play. No sign-in or installation required.
 
-**An original browser run-and-gun game. One complete mission.**
+**An original browser run-and-gun game. Eight complete chapters.**
 
-Fight through a rainforest, cross a broken bridge, and take down a mechanical
-guardian at a silent outpost. Inspired by classic side-scrolling action games,
-Red Falcon brings its own level, characters, mechanical enemies, and sound.
+Chase a lost signal from a rainforest outpost through fortresses, waterfalls,
+industrial ruins, and a living underground nest. Inspired by classic
+side-scrolling action games, Red Falcon brings its own eight-chapter campaign,
+characters, bosses, and sound.
 
 Built with native Canvas 2D and Web Audio. No runtime dependencies or remote asset
 requests.
@@ -48,26 +49,42 @@ is not needed for independent hosting.
 | Pause / sound / fullscreen | Esc / M / F |
 
 Touch devices have on-screen controls; landscape orientation is recommended.
-Standard and Veteran difficulty each keep a separate best score in your browser.
+Standard and Veteran difficulty keep separate best scores for each chapter.
+Clear a chapter to unlock the next, or replay any unlocked chapter using
+**Choose chapter**. Unlocks and scores are saved in this browser when storage is
+available; they do not sync across devices. Checkpoints last only for the current
+mission. Reloading or returning to the menu restarts the chapter. Each chapter
+begins with a Pulse Rifle; collect its weapon upgrades along the route.
 
-## The first mission
+## The campaign
 
-- One continuous, 7,040-unit level spanning the rainforest, broken bridge, and
-  forward outpost.
+| Chapter | Environment and challenge | Boss |
+| --- | --- | --- |
+| 01 · Verdant Outpost | Rainforest, broken bridges, forward outpost | Iron Guardian |
+| 02 · Relay Bastion | Fortified corridors and timed laser vents | Bulwark Iris |
+| 03 · Cataract Run | Rapids, suspended ledges, double-jump crossings | Tempest Ray |
+| 04 · Cinder Foundry | Opposing conveyor belts and furnace vents | Forge Crawler |
+| 05 · Whiteout Frontier | Slippery ice, glacial gaps, freezing vents | Frost Spire |
+| 06 · Railgrave Express | Freight decks and marked artillery impacts | Siege Engine |
+| 07 · Ion Heart | Reactor cells, energy vents, charged beam attacks | Prism Warden |
+| 08 · The Hollow Signal | Living terrain, spore vents, drone broods | Signal Sovereign |
+
+Each authored chapter has three sectors, three checkpoints, a distinct boss,
+and its own briefing and ending. The final boss has three phases; the others
+have two. Boss attacks include aimed volleys, shockwaves, marked bombardments,
+charged beams, crossfire, spirals, low barrages, and summoned drones.
+
 - Four enemy types: soldiers, heavy troops, turrets, and drones.
-- Three weapons: Pulse Rifle, Swarm Shot, and Arc Railgun, plus grenades and
-  destructible supply crates.
-- Double jumps, invulnerable dashes, and three automatic checkpoints that restore
-  armor and grenade supplies.
-- A two-phase AEGIS–07 boss with fan-shaped volleys, marked bombardments, and
-  ground shockwaves.
-- Mission timing, combo scoring, completion ranks, checkpoint retries, and pause
-  and restart controls.
+- Pulse Rifle, Swarm Shot, Arc Railgun, grenades, and destructible supply crates.
+- Double jumps, invulnerable dashes, and checkpoints that restore armor and grenades.
+- Per-chapter timing, combo scoring, completion ranks, and checkpoint retries.
+- Chapter selection, sequential unlocks, and a complete campaign ending.
 
-The renderer draws the layered rainforest, ruins, characters, and machinery in
-code. Particles, dash trails, hit pauses, screen shake, rain, and light shafts
-bring the action to life. Web Audio synthesizes the sound effects and rhythm
-track. The system's reduced-motion preference disables screen shake.
+Scenery, characters, and machinery are drawn in code. Each chapter has its own
+palette, architecture, atmosphere, and boss silhouette. Particles, dash trails,
+hit pauses, screen shake, and weather bring the action to life. Web Audio
+synthesizes the sound effects and rhythm track. The system's reduced-motion
+preference disables screen shake.
 
 ## Verify and develop
 
@@ -78,16 +95,23 @@ npm test
 
 The tests cover jumps and dashes, projectile collisions, weapon pickups,
 grenades, checkpoint recovery, pause behavior, difficulty, and boss phases. A
-complete-mission simulation reaches the ending using normal gameplay inputs.
+separate input-only simulation completes each of the eight chapters. Campaign
+tests also cover safe checkpoints, sequential unlocks, saved scores, invalid or
+blocked storage, chapter transitions, and the final boss phases.
 
 | File | Responsibility |
 | --- | --- |
 | [game.js](dist/src/game.js) | Game simulation, independent of the DOM |
+| [levels.js](dist/src/levels.js) | Eight authored routes, formations, chapter copy, and boss definitions |
+| [patterns.js](dist/src/patterns.js) | Boss attack patterns and hazard collisions |
+| [progress.js](dist/src/progress.js) | Browser-local chapter unlocks and best scores |
 | [render.js](dist/src/render.js) | Canvas drawing and visual effects |
+| [scenes.js](dist/src/scenes.js) | Chapter scenery, environmental effects, and boss art |
 | [audio.js](dist/src/audio.js) | Synthesized sound effects and music |
 | [i18n.js](dist/src/i18n.js) | English / Simplified Chinese copy and saved language preference |
 | [main.js](dist/src/main.js) | Input handling and interface |
-| [game.test.mjs](tests/game.test.mjs) | Game logic and complete-mission tests |
+| [game.test.mjs](tests/game.test.mjs) | Core game logic and first-mission tests |
+| [campaign.test.mjs](tests/campaign.test.mjs) | Eight-chapter playthroughs, progression, and mechanics |
 
 The read-only `window.redFalcon.snapshot()` exposes game state for debugging. It
 does not provide cheats or level-skipping controls.
@@ -101,5 +125,5 @@ manual to switch instantly; your choice is saved in this browser. Menus, combat
 messages, boss warnings, touch controls, and results support both languages.
 Switching languages preserves your current mission progress.
 
-This release contains one complete single-player browser mission. Multiplayer,
-gamepad support, and additional missions are outside its current scope.
+This release contains a complete, original eight-chapter single-player browser
+campaign. Multiplayer and gamepad support are outside its current scope.

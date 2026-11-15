@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0b181b">
-  <meta name="description" data-i18n-content="meta.description" content="An original run-and-gun mission. Cross the rainforest and destroy the mechanical guardian.">
+  <meta name="description" data-i18n-content="meta.description" content="Eight original run-and-gun chapters. Chase the signal from the rainforest to its source.">
   <title>Red Falcon: Broken Signal</title><link rel="icon" href="./favicon.svg"><link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -25,14 +25,15 @@
       <h1><span class="title-main" data-i18n="hero.title">RED
 FALCON</span><span class="title-caption" data-i18n="hero.caption">TACTICAL RUN &amp; GUN</span></h1>
       <div class="subtitle"><span></span><b data-i18n="hero.operation">BROKEN SIGNAL</b><small data-i18n="hero.operationCode">OPERATION 01</small></div>
-      <p class="intro"><span data-i18n="hero.intro1">The last signal came from deep in the rainforest.</span><br><span data-i18n="hero.intro2">Break the blockade. Bring the outpost back online.</span></p>
+      <p class="intro"><span id="chapter-brief">The last signal came from deep in the rainforest.</span><br><span id="chapter-count">Break the blockade. Bring the outpost back online.</span></p>
       <div class="launch"><button id="start" class="primary"><span class="button-label" data-i18n="action.start">Start mission</span><span aria-hidden="true">↗</span></button><button id="help" class="secondary"><span class="button-label" data-i18n="action.guide">Field manual</span><span aria-hidden="true">＋</span></button></div>
+      <button id="open-chapters" class="chapter-trigger"><span data-i18n="campaign.select">Choose chapter</span><b id="selected-chapter">01 / Verdant Outpost</b><span aria-hidden="true">→</span></button>
       <div class="difficulty"><span data-i18n="difficulty.label">Difficulty</span><button data-difficulty="normal" data-i18n="difficulty.normal" class="selected" aria-pressed="true">Standard</button><button data-difficulty="veteran" data-i18n="difficulty.veteran" aria-pressed="false">Veteran</button><span id="difficulty-note">Armor + checkpoint retries</span></div>
     </div>
-    <div class="scene-label"><span class="crosshair">＋</span><div>06° 14′ N &nbsp; 108° 32′ E<br><strong data-i18n="scene.name">Verdant Exclusion Zone</strong><span data-i18n="scene.status">OFFLINE 72 HOURS / STATUS UNKNOWN</span></div></div>
+    <div class="scene-label"><span class="crosshair">＋</span><div>06° 14′ N &nbsp; 108° 32′ E<br><strong id="scene-name">Verdant Exclusion Zone</strong><span id="campaign-progress">OFFLINE 72 HOURS / STATUS UNKNOWN</span></div></div>
     <footer class="mission-strip">
-      <div class="mission-number">01 <div class="mission-details"><span data-i18n="mission.chapter">CHAPTER ONE</span><span data-i18n="mission.name">Verdant Outpost</span></div></div>
-      <div class="route"><span class="route-item active"><b>01</b><span data-i18n="route.jungle">Infiltration</span></span><i></i><span class="route-item"><b>02</b><span data-i18n="route.bridge">Broken Bridge</span></span><i></i><span class="route-item"><b>03</b><span data-i18n="route.guardian">Iron Guardian</span></span></div>
+      <div class="mission-number"><b id="chapter-number">01</b> <div class="mission-details"><span id="chapter-code">CHAPTER ONE</span><span id="chapter-name">Verdant Outpost</span></div></div>
+      <div class="route"><span class="route-item active"><b>01</b><span id="route-0">Infiltration</span></span><i></i><span class="route-item"><b>02</b><span id="route-1">Broken Bridge</span></span><i></i><span class="route-item"><b>03</b><span id="route-2">Iron Guardian</span></span></div>
       <div class="mission-meta"><span data-i18n="mission.mode">Solo mission / Three sectors</span><small data-i18n="mission.devices">Keyboard + mouse recommended · Touch ready</small></div>
     </footer>
   </section>
@@ -42,13 +43,18 @@ FALCON</span><span class="title-caption" data-i18n="hero.caption">TACTICAL RUN &
     <div class="score-hud"><span data-i18n="hud.score">MISSION SCORE</span><strong id="score">000000</strong><small id="timer">00:00</small></div>
     <div class="weapon-hud"><span id="weapon-code">01 / PULSE RIFLE</span><strong id="weapon-name"><span id="weapon-label">Pulse Rifle</span><b>∞</b></strong><small id="weapon-hint">Collect S / R to unlock weapons</small></div>
     <div class="keyboard-hint"><span><kbd>A</kbd><kbd>D</kbd><span data-i18n="control.move">Move</span></span><span><kbd data-i18n="key.space">Space</kbd><span data-i18n="control.jump">Double jump</span></span><span><kbd>J</kbd><span data-i18n="control.fire">Fire</span></span><span><kbd>⇧</kbd><span data-i18n="control.dash">Dash</span></span><span><kbd>K</kbd><span data-i18n="control.grenade">Grenade</span></span></div>
-    <div id="boss-hud" class="hidden"><div><span data-i18n="boss.type">BLOCKADE WEAPON / AEGIS–07</span><strong data-i18n="boss.name">Iron Guardian</strong><small id="boss-phase">PHASE I</small></div><div class="boss-track"><i></i></div></div>
+    <div id="boss-hud" class="hidden"><div><span id="boss-code">BLOCKADE WEAPON / AEGIS–07</span><strong id="boss-name">Iron Guardian</strong><small id="boss-phase">PHASE I</small></div><div class="boss-track"><i></i></div></div>
   </section>
   <div id="notification" role="status" aria-live="polite"></div>
   <div id="sector-banner" class="hidden"><small>AREA 01</small><strong>Jungle Infiltration</strong><span>Cross the rainforest. Reach the bridge.</span></div>
   <section id="pause-screen" class="screen centered hidden"><div class="panel"><div class="eyebrow" data-i18n="pause.eyebrow">SIGNAL ON HOLD</div><h2 data-i18n="pause.title">Mission paused</h2><p data-i18n="pause.body">Catch your breath. Then keep moving.</p><button id="resume" class="primary"><span class="button-label" data-i18n="action.resume">Resume mission</span><span aria-hidden="true">↗</span></button><button id="restart" class="secondary" data-i18n="action.restart">Restart from checkpoint</button><button id="exit" class="text-btn" data-i18n="action.menu">Main menu</button></div></section>
   <section id="death-screen" class="screen centered hidden"><div class="panel"><div class="eyebrow orange" data-i18n="death.eyebrow">CONNECTION LOST</div><h2 data-i18n="death.title">Signal lost</h2><p data-i18n="death.body">The outpost is still there. Next time, get closer.</p><button id="retry" class="primary"><span class="button-label" data-i18n="action.retry">Retry checkpoint</span><span aria-hidden="true">↗</span></button><button id="death-exit" class="text-btn" data-i18n="action.menu">Main menu</button></div></section>
-  <section id="victory" class="screen centered hidden"><div class="panel victory-panel"><div class="eyebrow" data-i18n="victory.eyebrow">TRANSMISSION RESTORED</div><h2 data-i18n="victory.title">Back on the air.</h2><p data-i18n="victory.body">Verdant Outpost is clear. Good work, Falcon.</p><div class="results"><div class="rank" id="rank">A</div><div><span data-i18n="hud.score">MISSION SCORE</span><strong id="final-score">0</strong></div><div><span data-i18n="victory.time">MISSION TIME</span><strong id="final-time">00:00</strong></div><div><span data-i18n="victory.kills">KILLS / RETRIES</span><strong id="final-kills">0 / 0</strong></div></div><div id="best-result"></div><button id="replay" class="primary"><span class="button-label" data-i18n="action.replay">Play again</span><span aria-hidden="true">↗</span></button><button id="victory-exit" class="text-btn" data-i18n="action.menu">Main menu</button></div></section>
+  <section id="victory" class="screen centered hidden"><div class="panel victory-panel"><div class="eyebrow" id="victory-eyebrow">TRANSMISSION RESTORED</div><h2 id="victory-title">Back on the air.</h2><p id="victory-body">Verdant Outpost is clear. Good work, Falcon.</p><div class="results"><div class="rank" id="rank">A</div><div><span data-i18n="hud.score">MISSION SCORE</span><strong id="final-score">0</strong></div><div><span data-i18n="victory.time">MISSION TIME</span><strong id="final-time">00:00</strong></div><div><span data-i18n="victory.kills">KILLS / RETRIES</span><strong id="final-kills">0 / 0</strong></div></div><div id="best-result"></div><button id="next-chapter" class="primary" data-i18n="campaign.next">Next chapter →</button><button id="replay" class="primary"><span class="button-label" data-i18n="action.replay">Play again</span><span aria-hidden="true">↗</span></button><button id="victory-exit" class="text-btn" data-i18n="action.menu">Main menu</button></div></section>
+  <dialog id="chapters" aria-labelledby="chapters-title">
+    <div class="guide-head"><div><div class="eyebrow" data-i18n="campaign.map">CAMPAIGN / 8 CHAPTERS</div><h2 id="chapters-title" data-i18n="campaign.select">Choose chapter</h2></div><button id="close-chapters" class="icon-btn" data-i18n-aria-label="campaign.close" aria-label="Close chapter selection">×</button></div>
+    <div id="chapter-list" class="chapter-list"></div>
+    <p id="chapter-storage" class="chapter-storage" data-i18n="campaign.storage">Checkpoints last for this mission. Chapter unlocks and best scores are saved on this browser when storage is available.</p>
+  </dialog>
   <dialog id="guide">
     <div class="guide-head"><div><div class="eyebrow" data-i18n="guide.eyebrow">FIELD MANUAL / 01</div><h2 data-i18n="guide.title">Turn instinct into firepower.</h2></div><button id="close-guide" class="icon-btn" data-i18n-aria-label="a11y.closeGuide" aria-label="Close field manual">×</button></div>
     <div class="guide-grid">
