@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+**[在线试玩](https://red-falcon-broken-signal.arronstudio.chatgpt.site)** — 打开浏览器即可游玩，无需登录或安装。
+
 **原创浏览器横版跑跳射击游戏，包含一个完整关卡。**
 
 穿过雨林、跨越断桥，在失联前哨击败机械守卫。赤隼以经典横版动作游戏为灵感，

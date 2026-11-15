@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+**[Play online](https://red-falcon-broken-signal.arronstudio.chatgpt.site)** — Open in your browser and play. No sign-in or installation required.
+
 **An original browser run-and-gun game. One complete mission.**
 
 Fight through a rainforest, cross a broken bridge, and take down a mechanical
