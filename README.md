@@ -1,14 +1,24 @@
 # 赤隼 · 断线行动
 
+**RED FALCON — OPERATION: BROKEN SIGNAL**
+
 原创的单人横版跑跳射击游戏，以经典动作游戏为灵感，重新设计第一关、角色、机械敌人与声音。浏览器原生 Canvas 2D + Web Audio，无运行时依赖，无远程素材请求。
+
+![赤隼：断线行动游戏画面](docs/preview.png)
 
 ## 运行
 
+需要 Node.js 20 或更新版本，以及现代浏览器。项目没有 npm 依赖，无需安装依赖即可运行。
+
 ```sh
+git clone https://github.com/aaronguostudio/red-falcon.git
+cd red-falcon
 npm run dev
 ```
 
-打开 http://red-falcon.localhost:4177 。独立静态服务，不依赖其它项目的认证网关。网站发布目录是 `dist/`，直接以静态站点托管即可。
+打开 [本地游戏](http://red-falcon.localhost:4177)。推荐桌面浏览器全屏游玩。
+
+`dist/` 直接存放 HTML、CSS 和 JavaScript 源码，不是生成的构建产物。将该目录发布到任意静态网站托管服务即可，无需构建。`.openai/hosting.json` 对应原站点的 Sites 配置；自行托管时不需要该配置。
 
 ## 操作
 
@@ -37,6 +47,8 @@ npm run dev
 npm run check
 npm test
 ```
+
+测试覆盖跳跃和冲刺、射击碰撞、武器拾取、手雷、检查点恢复、暂停、难度、Boss 阶段，以及只通过正常操作输入完成整关的模拟测试。
 
 `game.js` 是与 DOM 无关的游戏模拟；`render.js` 负责绘制；`audio.js` 负责音频；`main.js` 负责输入与界面。只读的 `window.redFalcon.snapshot()` 提供调试状态，不含作弊或跳关接口。
 
