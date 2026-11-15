@@ -31,7 +31,7 @@ test('sample boss can be defeated using movement, aiming, jumps and grenades',()
   const mortar=g.hazards.find(h=>h.type==='mortar'&&!h.hit&&h.timer<.7&&Math.abs(h.x-p.x)<90);
   if(mortar)held.add(p.x<6200?'KeyD':'KeyA');
   if(jumpWait<=0&&p.grounded&&(g.hazards.some(h=>h.type==='wave'&&h.x>p.x&&h.x-p.x<210)||g.bullets.some(b=>!b.player&&b.x>p.x&&b.x-p.x<140&&Math.abs(b.y-p.y-25)<50))){pressed.add('Space');jumpWait=15;}
-  if(grenadeWait<=0&&p.grenades>0){pressed.add('KeyK');grenadeWait=90;}
+  if(grenadeWait<=0&&p.grenades>0){pressed.add('KeyL');grenadeWait=90;}
   jumpWait--;grenadeWait--;g.update(1/60,{held,pressed,aim:{x:g.boss.x+80,y:g.boss.y+145}});
  }
  assert.equal(g.state,'victory');assert.equal(g.boss.phase,2);assert.ok(g.boss.attack>=3);

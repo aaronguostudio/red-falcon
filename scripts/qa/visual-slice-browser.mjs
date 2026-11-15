@@ -22,7 +22,7 @@ async function play(end){let held=new Set(),mouse=false,jumpAt=0,grenadeAt=0,dod
   const floor=LEVELS[0].platforms.some(v=>p.x+100>v.x&&p.x+100<v.x+v.w&&v.y>=p.y+58&&v.y<690);
   const wave=s.hazards.some(h=>h.type==='wave'&&h.x>p.x&&h.x-p.x<220),bullet=s.threats.some(b=>b.vx<0&&b.x>p.x&&b.x-p.x<150&&Math.abs(b.y-(p.y+24))<50);
   if(s.time>jumpAt&&(gap||!p.grounded&&p.vy>30&&!floor&&p.jumps<2||p.grounded&&(wave||bullet))){await page.keyboard.press('Space');jumpAt=s.time+.2;}
-  if(s.boss.active&&s.time>grenadeAt&&p.grenades>0){await page.keyboard.press('KeyK');grenadeAt=s.time+1.5;}
+  if(s.boss.active&&s.time>grenadeAt&&p.grenades>0){await page.keyboard.press('KeyL');grenadeAt=s.time+1.5;}
   if(!screen&&s.time>7){await page.screenshot({path:out+`/slice-${s.sample}-action.png`});screen=true;}
   await page.clock.runFor(100);
  }

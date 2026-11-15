@@ -11,7 +11,8 @@ This prototype applies the approved art direction to a timed opening and a compl
 - Eight running poses at approximately 15 frames per second at full speed; independent ascending, descending and landing poses. Directional aim uses additional articulated poses, with small torso adjustments to retain free mouse aiming. Shared registration keeps bullets and muzzle flashes attached to the rifle.
 - Guardian wind-up, recoil, recovery and defeat poses. The attack cycle retains volley, marked mortar strikes and ground shockwaves, with a second phase below half health.
 - Recoil, brief impact stops, landing sound, sparks, bounded camera shake and dash echoes. Reduced-motion preference suppresses camera shake and animated rain.
-- English and Simplified Chinese, desktop keyboard/mouse and touch buttons. Landscape is recommended on phones.
+- Hold ↓ / S to crouch and fire with a lower hitbox; release to stand. K / Space jumps directly out of the crouch, and L / right click throws a grenade. This reuses the existing pose atlases.
+- English and Simplified Chinese, desktop keyboard/mouse and touch buttons (including hold-to-crouch). Landscape is recommended on phones.
 
 ## Performance design
 
@@ -41,7 +42,7 @@ Raw evidence: [original rendering](perf-baseline.json), [sample rendering](perf-
 
 ## Verification
 
-`npm run check` and all 37 Node tests pass, including all eight campaign routes and the new sample's timer, retry, firing registration, effect cap and input-driven boss completion. A browser keyboard/mouse playthrough reaches the intermission, switches language, defeats the two-phase boss, checks replay, returns to the campaign and confirms the campaign save is unchanged. Launchers and gameplay were inspected at 1280×720, 844×390 and 390×844. Touch checks use browser emulation; physical-device validation remains open.
+`npm run check` and all 42 Node tests pass, including all eight campaign routes, crouch collision and firing, K/Space jumps, L grenades, and the sample's timer, retry, firing registration, effect cap and input-driven boss completion. A browser keyboard/mouse playthrough reaches the intermission, switches language, defeats the two-phase boss, checks replay, returns to the campaign and confirms the campaign save is unchanged. Launchers and gameplay were inspected at 1280×720, 844×390 and 390×844. Touch checks use browser emulation; physical-device validation remains open.
 
 For reproduction, install Playwright in a separate tool environment, set `PLAYWRIGHT_MODULE` to its module path and optionally set `CHROME_PATH`. Keep the project server running on the local domain:
 
@@ -52,6 +53,7 @@ node scripts/perf/render-benchmark.mjs
 node scripts/perf/render-benchmark.mjs --sample
 node scripts/perf/frame-pacing.mjs
 node scripts/qa/visual-slice-browser.mjs
+node scripts/qa/controls-browser.mjs
 ```
 
 `GAME_URL` overrides the local domain. `QA_OUTPUT` selects where browser screenshots and the gameplay report are written. Performance scripts write their JSON into this directory.

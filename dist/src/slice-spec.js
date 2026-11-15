@@ -5,14 +5,14 @@ export const FALCON_SCALE=78/265;
 const RUN=[0,4,1,5,2,6,3,7];
 export function falconPose(p){
   if(!p.grounded)return p.vy<40?9:10;
-  if(p.land>.2)return 11;
+  if(p.crouching||p.land>.2)return 11;
   return Math.abs(p.vx)>28?RUN[Math.floor(p.step*1.2)%8]:8;
 }
 export function falconRegistration(p){
   const pose=falconPose(p),gunY=pose===9?110:pose===10?105:pose===11?211:145;
   return{pose,gunY,footY:pose<8?320:326};
 }
-export function falconOrigin(p){if(falconAimRig(p))return{x:p.x+p.w/2,y:p.y+p.h+(211-455)*AIM_SCALE};const r=falconRegistration(p);return{x:p.x+p.w/2,y:p.y+p.h+(r.gunY-r.footY)*FALCON_SCALE};}
+export function falconOrigin(p){if(falconAimRig(p))return{x:p.x+p.w/2,y:p.y+p.h+(211-455)*AIM_SCALE+(p.crouching?22:0)};const r=falconRegistration(p);return{x:p.x+p.w/2,y:p.y+p.h+(r.gunY-r.footY)*FALCON_SCALE};}
 export const AIM_SCALE=78/340;
 const AIM_TIPS={1:[334,104],2:[240,28],3:[307,303],4:[220,417],5:[338,104],7:[313,303]};
 export function falconAimRig(p){

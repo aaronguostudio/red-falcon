@@ -20,7 +20,7 @@ export class Game {
     this.stats={shots:0,hits:0,damage:0};this.player=this.makePlayer(120);this.populate(0);
   }
   setLevel(index){if(!Number.isInteger(index)||!LEVELS[index])throw new RangeError('Unknown chapter');this.levelIndex=index;this.level=LEVELS[index];this.world=this.level.world;this.platforms=this.level.platforms;this.sectors=this.level.sectors;}
-  makePlayer(x){return {x,y:500,w:28,h:58,vx:0,vy:0,face:1,aim:0,hp:100,grounded:false,jumps:0,coyote:0,jumpBuffer:0,invuln:1.7,fire:0,dash:0,dashCd:0,grenadeCd:0,weapon:0,unlocked:[0],grenades:4,step:0,muzzle:0,land:0};}
+  makePlayer(x){return {x,y:500,w:28,h:58,vx:0,vy:0,face:1,aim:0,hp:100,grounded:false,crouching:false,jumps:0,coyote:0,jumpBuffer:0,invuln:1.7,fire:0,dash:0,dashCd:0,grenadeCd:0,weapon:0,unlocked:[0],grenades:4,step:0,muzzle:0,land:0};}
   emit(type,data={}){this.onEvent({type,...data});}
   makeEnemy([ex,y,type],i){return {id:i,x:ex,origin:ex,y:y-(type==='drone'?22:type==='turret'?34:56),baseY:y,w:type==='heavy'?38:type==='turret'?46:30,h:type==='drone'?28:type==='turret'?34:56,type,hp:type==='heavy'?120:type==='turret'?88:type==='drone'?40:48,maxHp:type==='heavy'?120:type==='turret'?88:type==='drone'?40:48,cd:1+(i%3)*.3,telegraph:0,flash:0,phase:i*.7,face:-1,vx:0,dead:false};}
   populate(x){
@@ -62,37 +62,45 @@ export class Game {
     }
     for(const cp of this.level.checkpoints)if(p.x>=cp&&this.checkpoint<cp){this.checkpoint=cp;p.hp=100;p.grenades=4;this.fx(p.x+14,p.y+30,28,'#dff5a0');this.ring(p.x+14,p.y+30,'#dff5a0',120);this.emit('checkpoint');this.emit('notice',{message:{key:'notice.checkpoint'}});}
   }
+  setCrouching(crouching){
+    const p=this.player;if(p.crouching===crouching)return;
+    const feet=p.y+p.h;p.crouching=crouching;p.h=crouching?36:58;p.y=feet-p.h;
+  }
+  playerOrigin(){const p=this.player;return this.sample?falconOrigin(p):{x:p.x+14,y:p.y+p.h-(p.crouching?17:36)};}
   updatePlayer(dt,input){
     const p=this.player,h=input.held||new Set(),k=input.pressed||new Set(),has=(...ks)=>ks.some(v=>h.has(v)),press=(...ks)=>ks.some(v=>k.has(v));
     p.invuln-=dt;p.fire-=dt;p.dashCd-=dt;p.grenadeCd-=dt;p.muzzle-=dt;p.land=Math.max(0,p.land-dt*5);p.coyote-=dt;p.jumpBuffer-=dt;
     let move=(has('KeyD','ArrowRight')?1:0)-(has('KeyA','ArrowLeft')?1:0);
     if(move)p.face=move;
-    if(press('Space','KeyL'))p.jumpBuffer=.13;
+    if(press('Space','KeyK'))p.jumpBuffer=.13;
+    const wantsCrouch=has('ArrowDown','KeyS'),startDash=press('ShiftLeft','ShiftRight','KeyH')&&p.dashCd<=0;
+    this.setCrouching(wantsCrouch&&p.grounded&&p.dash<=0&&p.jumpBuffer<=0&&!startDash);
     if(p.jumpBuffer>0&&(p.coyote>0||p.jumps<2)){
       if(!p.grounded&&p.coyote<=0&&p.jumps===0)p.jumps=1;
       if(p.jumps<2){p.vy=-650;p.jumps++;p.grounded=false;p.coyote=0;p.jumpBuffer=0;this.fx(p.x+14,p.y+58,p.jumps===2?18:9,p.jumps===2?'#93dee0':'#94ac8d',120);if(p.jumps===2)this.ring(p.x+14,p.y+55,'#93dee0',36);this.emit('jump',{double:p.jumps===2});}
     }
-    if(press('ShiftLeft','ShiftRight','KeyH')&&p.dashCd<=0){p.dash=.18;p.dashCd=1.2;p.invuln=Math.max(p.invuln,.26);p.vy=0;this.emit('dash');this.ring(p.x+14,p.y+30,'#a5f2dc',45);}
-    if(p.dash>0){p.dash-=dt;p.vx=p.face*900;p.vy=0;this.ghosts.push({x:p.x,y:p.y,face:p.face,life:.22});}
-    else{p.vx=lerp(p.vx,move*310,1-Math.exp(-dt*(p.grounded?(this.level.theme==='snow'?5:24):13)));p.vy+=1700*dt;}
+    if(startDash){p.dash=.18;p.dashCd=1.2;p.invuln=Math.max(p.invuln,.26);p.vy=0;this.emit('dash');this.ring(p.x+14,p.y+30,'#a5f2dc',45);}
+    if(p.dash>0){p.dash-=dt;p.vx=p.face*900;p.vy=0;this.ghosts.push({x:p.x,y:p.y,face:p.face,h:p.h,crouching:p.crouching,life:.22});}
+    else{p.vx=p.crouching?0:lerp(p.vx,move*310,1-Math.exp(-dt*(p.grounded?(this.level.theme==='snow'?5:24):13)));p.vy+=1700*dt;}
     const prevBottom=p.y+p.h;
     const belt=p.grounded?this.platforms.find(s=>s.conveyor&&p.x+p.w>s.x&&p.x<s.x+s.w&&Math.abs(prevBottom-s.y)<3)?.conveyor||0:0;
     p.x+=(p.vx+belt)*dt;p.x=clamp(p.x,this.boss.active?this.boss.arena:20,this.sample==='intro'?SLICE_END:this.world-80);p.y+=p.vy*dt;p.grounded=false;
     for(const s of this.platforms){if(p.vy>=0&&p.x+p.w>s.x&&p.x<s.x+s.w&&prevBottom<=s.y+2&&p.y+p.h>=s.y){p.y=s.y-p.h;p.vy=0;p.grounded=true;p.coyote=.11;p.jumps=0;if(prevBottom<s.y-6){p.land=.6;if(this.sample)this.emit('land');this.fx(p.x+14,s.y,9,'#708c78',90);}}}
     if(p.y>H+80){this.damagePlayer(30,true);if(this.state==='playing'){p.x=this.checkpoint||120;p.y=440;p.vx=0;p.vy=0;p.invuln=2;this.camera=clamp(p.x-300,0,this.world-W);this.emit('notice',{message:{key:'notice.fall'}});}}
+    this.setCrouching(wantsCrouch&&p.grounded&&p.dash<=0&&p.jumpBuffer<=0);
     p.step+=Math.abs(p.vx)*dt*.04;
-    const origin=this.sample?falconOrigin(p):{x:p.x+14,y:p.y+22};
+    const origin=this.playerOrigin();
     if(input.aim){p.aim=Math.atan2(input.aim.y-origin.y,input.aim.x-origin.x);p.face=Math.cos(p.aim)>=0?1:-1;}
-    else{let ay=(has('KeyS','ArrowDown')?1:0)-(has('KeyW','ArrowUp')?1:0);p.aim=ay?Math.atan2(ay,move||0):p.face===1?0:Math.PI;}
+    else{let ay=(!p.grounded&&wantsCrouch?1:0)-(has('KeyW','ArrowUp')?1:0);p.aim=ay?Math.atan2(ay,move||0):p.face===1?0:Math.PI;}
     if(press('KeyQ')){const idx=p.unlocked.indexOf(p.weapon);p.weapon=p.unlocked[(idx+1)%p.unlocked.length];this.emit('weapon');}
     if(has('KeyJ','Mouse0')&&p.fire<=0)this.firePlayer();
-    if(press('KeyK','Mouse2')&&p.grenadeCd<=0&&p.grenades>0){p.grenades--;p.grenadeCd=.5;this.grenades.push({x:p.x+14,y:p.y+15,vx:Math.cos(p.aim)*440,vy:-390+Math.sin(p.aim)*150,life:1.15});this.emit('throw');}
+    if(press('KeyL','Mouse2')&&p.grenadeCd<=0&&p.grenades>0){p.grenades--;p.grenadeCd=.5;this.grenades.push({x:p.x+14,y:p.y+15,vx:Math.cos(p.aim)*440,vy:-390+Math.sin(p.aim)*150,life:1.15});this.emit('throw');}
     for(const e of this.enemies)if(!e.dead&&overlap(p,e))this.damagePlayer(e.type==='heavy'?18:12);
     if(this.boss.active&&!this.boss.dead&&overlap(p,this.boss))this.damagePlayer(24);
   }
   firePlayer(){
     const p=this.player,w=WEAPONS[p.weapon];p.fire=w.rate;p.muzzle=.06;this.stats.shots++;
-    const origin=this.sample?falconOrigin(p):{x:p.x+14,y:p.y+22},barrel=this.sample?falconBarrel(p):34;
+    const origin=this.playerOrigin(),barrel=this.sample?falconBarrel(p):34;
     const spread=p.weapon===1?[-.23,-.115,0,.115,.23]:[0];
     for(const offset of spread){const a=p.aim+offset;this.bullets.push({x:origin.x+Math.cos(a)*barrel,y:origin.y+Math.sin(a)*barrel,vx:Math.cos(a)*w.speed,vy:Math.sin(a)*w.speed,life:1.1,damage:w.damage,player:true,color:w.color,rail:p.weapon===2,hit:new Set(),r:p.weapon===2?5:3});}
     this.fx(origin.x+Math.cos(p.aim)*barrel,origin.y+Math.sin(p.aim)*barrel,2,w.color,80);this.emit('shoot',{weapon:p.weapon});
@@ -178,6 +186,6 @@ export class Game {
     for(const t of this.texts){t.life-=dt;t.y-=dt*35;}this.texts=this.texts.filter(t=>t.life>0);
     for(const g of this.ghosts)g.life-=dt;this.ghosts=this.ghosts.filter(g=>g.life>0);
   }
-  snapshot(){return {sample:this.sample,level:this.levelIndex,levelId:this.level.id,world:this.world,camera:this.camera,hazards:this.hazards.map(h=>({...h})),environment:this.environment.map(h=>({...h})),enemies:this.enemies.filter(e=>!e.dead).map(e=>({x:e.x,y:e.y,w:e.w,h:e.h})),threats:this.bullets.filter(b=>!b.player).map(b=>({x:b.x,y:b.y,vx:b.vx,vy:b.vy})),state:this.state,time:this.time,score:this.score,kills:this.kills,deaths:this.deaths,checkpoint:this.checkpoint,sector:this.sector,player:{x:this.player.x,y:this.player.y,vx:this.player.vx,vy:this.player.vy,hp:this.player.hp,grounded:this.player.grounded,jumps:this.player.jumps,weapon:this.player.weapon,unlocked:[...this.player.unlocked],grenades:this.player.grenades,dashCd:this.player.dashCd},boss:{x:this.boss.x,y:this.boss.y,w:this.boss.w,h:this.boss.h,kind:this.boss.kind,actionAge:this.boss.actionAge,activeAttack:this.boss.activeAttack,attack:this.boss.attack,hp:this.boss.hp,phase:this.boss.phase,active:this.boss.active,dead:this.boss.dead},enemiesAlive:this.enemies.filter(e=>!e.dead).length,bullets:this.bullets.length};}
+  snapshot(){return {sample:this.sample,level:this.levelIndex,levelId:this.level.id,world:this.world,camera:this.camera,hazards:this.hazards.map(h=>({...h})),environment:this.environment.map(h=>({...h})),enemies:this.enemies.filter(e=>!e.dead).map(e=>({x:e.x,y:e.y,w:e.w,h:e.h})),threats:this.bullets.filter(b=>!b.player).map(b=>({x:b.x,y:b.y,vx:b.vx,vy:b.vy})),state:this.state,time:this.time,score:this.score,kills:this.kills,deaths:this.deaths,checkpoint:this.checkpoint,sector:this.sector,player:{x:this.player.x,y:this.player.y,vx:this.player.vx,vy:this.player.vy,hp:this.player.hp,grounded:this.player.grounded,crouching:this.player.crouching,h:this.player.h,jumps:this.player.jumps,weapon:this.player.weapon,unlocked:[...this.player.unlocked],grenades:this.player.grenades,dashCd:this.player.dashCd},boss:{x:this.boss.x,y:this.boss.y,w:this.boss.w,h:this.boss.h,kind:this.boss.kind,actionAge:this.boss.actionAge,activeAttack:this.boss.activeAttack,attack:this.boss.attack,hp:this.boss.hp,phase:this.boss.phase,active:this.boss.active,dead:this.boss.dead},enemiesAlive:this.enemies.filter(e=>!e.dead).length,bullets:this.bullets.length};}
 }
 export function segmentRect(x0,y0,x1,y1,r){let t0=0,t1=1;const dx=x1-x0,dy=y1-y0;for(const [p,q]of[[-dx,x0-r.x],[dx,r.x+r.w-x0],[-dy,y0-r.y],[dy,r.y+r.h-y0]]){if(Math.abs(p)<1e-9){if(q<0)return false;}else{const t=q/p;if(p<0){if(t>t1)return false;t0=Math.max(t0,t);}else{if(t<t0)return false;t1=Math.min(t1,t);}}}return t0<=t1;}

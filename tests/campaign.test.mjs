@@ -91,7 +91,7 @@ for(const [levelIndex,level] of LEVELS.entries())test(`input-only playthrough: $
     const bulletNear=g.bullets.some(b=>!b.player&&b.vx<0&&b.x>p.x&&b.x-p.x<120&&Math.abs(b.y-(p.y+24))<50);
     if(jumpWait<=0&&(gapAhead||(!p.grounded&&p.vy>30&&!floorSoon&&p.jumps<2)||p.grounded&&(waveNear||beamNear||ventNear||bulletNear))){pressed.add('Space');jumpWait=10;}
     if(g.boss.active&&bulletNear&&p.dashCd<=0)pressed.add('ShiftLeft');
-    if(g.boss.active&&p.grenades>0&&grenadeWait<=0){pressed.add('KeyK');grenadeWait=90;}
+    if(g.boss.active&&p.grenades>0&&grenadeWait<=0){pressed.add('KeyL');grenadeWait=90;}
     jumpWait--;grenadeWait--;g.update(1/60,{held,pressed,aim});
   }
   assert.equal(g.state,'victory',`${level.id}: stopped at ${g.player.x}, boss hp ${g.boss.hp}`);

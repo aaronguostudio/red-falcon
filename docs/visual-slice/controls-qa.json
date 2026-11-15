@@ -1,0 +1,20 @@
+{
+  "results": [
+    {
+      "sample": false,
+      "crouchHeight": 36,
+      "feetPreserved": true,
+      "jumpAndGrenadeBindings": true,
+      "translations": true
+    },
+    {
+      "sample": true,
+      "crouchHeight": 36,
+      "feetPreserved": true,
+      "jumpAndGrenadeBindings": true,
+      "translations": true
+    }
+  ],
+  "touchVerified": true,
+  "errors": []
+}

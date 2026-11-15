@@ -26,7 +26,7 @@ test('complete first level using only movement, aim, jump and grenade inputs',()
     const floorSoon=PLATFORMS.some(s=>p.x+100>s.x&&p.x+100<s.x+s.w&&s.y>=p.y+p.h&&s.y<690);
     const waveNear=g.boss.active&&g.hazards.some(h=>h.type==='wave'&&h.x>p.x&&h.x-p.x<180)&&p.grounded;
     if(jumpWait<=0&&(gapAhead||(!p.grounded&&p.vy>30&&!floorSoon&&p.jumps<2)||waveNear)){pressed.add('Space');jumpWait=10;}
-    if(g.boss.active&&p.grenades>0&&grenadeWait<=0){pressed.add('KeyK');grenadeWait=90;}
+    if(g.boss.active&&p.grenades>0&&grenadeWait<=0){pressed.add('KeyL');grenadeWait=90;}
     jumpWait--;grenadeWait--;g.update(1/60,{held,pressed,aim});
   }
   assert.equal(g.state,'victory');assert.equal(g.checkpoint,5900);assert.deepEqual(g.player.unlocked,[0,1,2]);assert.equal(g.boss.phase,2);assert.ok(g.boss.attack>=3,'all three boss attacks must be experienced');assert.ok(g.kills>=10);

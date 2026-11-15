@@ -62,15 +62,15 @@ export class SliceRenderer {
   player(p,t,{alpha=1,ghost=false}={}){
     const c=this.owner.c,img=this.images.falcon,{pose,gunY,footY}=falconRegistration(p),a=atlas(img,pose,4,3);
     const origin=falconOrigin(p),angle=p.face===1?p.aim:Math.PI-p.aim,rig=falconAimRig(p);
-    if(!ghost&&p.grounded)ellipse(c,p.x+14,p.y+58,24,4,'#03171aa0');
+    if(!ghost&&p.grounded)ellipse(c,p.x+14,p.y+p.h,24,4,'#03171aa0');
     c.save();c.globalAlpha=alpha*(p.invuln>0&&!ghost&&Math.sin(t*30)>0?.55:1);
-    c.translate(p.x+14,p.y+58);c.scale(p.face,1);
+    c.translate(p.x+14,p.y+p.h);c.scale(p.face,1);
     if(rig){
-      const aimImage=this.images.aim,cell=atlas(aimImage,rig.index,4,2),running=p.grounded&&Math.abs(p.vx)>28;
-      if(running){c.save();c.scale(FALCON_SCALE,FALCON_SCALE);c.drawImage(img,a.x,a.y+195,a.w,a.h-195,-180,195-footY,a.w,a.h-195);c.restore();}
+      const aimImage=this.images.aim,cell=atlas(aimImage,rig.index,4,2),running=p.grounded&&Math.abs(p.vx)>28,useLegs=p.crouching||running;
+      if(useLegs){const seam=p.crouching?264:195;c.save();c.scale(FALCON_SCALE,FALCON_SCALE);c.drawImage(img,a.x,a.y+seam,a.w,a.h-seam,-180,seam-footY,a.w,a.h-seam);c.restore();}
       c.scale(AIM_SCALE,AIM_SCALE);
-      if(!running)c.drawImage(aimImage,cell.x,cell.y+285,cell.w,cell.h-285,-200,285-455,cell.w,cell.h-285);
-      c.translate(0,211-455);c.rotate(rig.angle-rig.baseAngle);c.translate(p.muzzle>0?-4*p.muzzle/.06:0,0);
+      if(!useLegs)c.drawImage(aimImage,cell.x,cell.y+285,cell.w,cell.h-285,-200,285-455,cell.w,cell.h-285);
+      c.translate(0,211-455+(p.crouching?22/AIM_SCALE:0));c.rotate(rig.angle-rig.baseAngle);c.translate(p.muzzle>0?-4*p.muzzle/.06:0,0);
       c.drawImage(aimImage,cell.x,cell.y,cell.w,292,-200,-211,cell.w,292);
     }else{
       c.scale(FALCON_SCALE,FALCON_SCALE);

@@ -58,15 +58,20 @@ is not needed for independent hosting.
 | Action | Input |
 | --- | --- |
 | Move | A / D or Left / Right arrows |
-| Double jump | Space / L |
+| Double jump | K / Space |
+| Crouch and fire | Hold Down arrow / S on the ground |
 | Continuous fire | Hold J, or aim and fire with the left mouse button |
-| Aim up / down | W / S or Up / Down arrows |
+| Aim up / down | W / Up arrow; S / Down arrow aims down in midair |
 | Invulnerable dash | Shift / H |
-| Throw a grenade | K / right mouse button |
+| Throw a grenade | L / right mouse button |
 | Cycle unlocked weapons | Q |
 | Pause / sound / fullscreen | Esc / M / F |
 
-Touch devices have on-screen controls; landscape orientation is recommended.
+Crouching lowers the hitbox, keeps your feet planted and allows firing. Release
+to stand; K / Space jumps immediately out of the crouch. The bindings apply to
+both the visual sample and the campaign.
+
+Touch devices have on-screen controls, including a hold-to-crouch button; landscape orientation is recommended.
 Standard and Veteran difficulty keep separate best scores for each chapter.
 Clear a chapter to unlock the next, or replay any unlocked chapter using
 **Choose chapter**. Unlocks and scores are saved in this browser when storage is
