@@ -27,6 +27,8 @@ FALCON</span><span class="title-caption" data-i18n="hero.caption">TACTICAL RUN &
       <div class="subtitle"><span></span><b data-i18n="hero.operation">BROKEN SIGNAL</b><small data-i18n="hero.operationCode">OPERATION 01</small></div>
       <p class="intro"><span id="chapter-brief">The last signal came from deep in the rainforest.</span><br><span id="chapter-count">Break the blockade. Bring the outpost back online.</span></p>
       <div class="launch"><button id="start" class="primary"><span class="button-label" data-i18n="action.start">Start mission</span><span aria-hidden="true">↗</span></button><button id="help" class="secondary"><span class="button-label" data-i18n="action.guide">Field manual</span><span aria-hidden="true">＋</span></button></div>
+      <a class="slice-entry" href="?sample=intro" data-i18n="sample.entry">Play the new visual sample →</a>
+      <div id="slice-menu" class="hidden"><button id="sample-boss" class="chapter-trigger" data-i18n="sample.boss">Challenge AEGIS–07 →</button><small id="slice-loading" role="status"></small><a href="./" data-i18n="sample.campaign">Back to the eight-chapter campaign</a></div>
       <button id="open-chapters" class="chapter-trigger"><span data-i18n="campaign.select">Choose chapter</span><b id="selected-chapter">01 / Verdant Outpost</b><span aria-hidden="true">→</span></button>
       <div class="difficulty"><span data-i18n="difficulty.label">Difficulty</span><button data-difficulty="normal" data-i18n="difficulty.normal" class="selected" aria-pressed="true">Standard</button><button data-difficulty="veteran" data-i18n="difficulty.veteran" aria-pressed="false">Veteran</button><span id="difficulty-note">Armor + checkpoint retries</span></div>
     </div>
@@ -37,6 +39,7 @@ FALCON</span><span class="title-caption" data-i18n="hero.caption">TACTICAL RUN &
       <div class="mission-meta"><span data-i18n="mission.mode">Solo mission / Three sectors</span><small data-i18n="mission.devices">Keyboard + mouse recommended · Touch ready</small></div>
     </footer>
   </section>
+  <section id="sample-ready" class="screen centered hidden"><div class="panel"><div class="eyebrow" data-i18n="sample.file">VISUAL SAMPLE / 01</div><h2 data-i18n="sample.readyTitle">The outpost is ahead.</h2><p data-i18n="sample.readyBody">Field test complete. Reload your armor and all three weapons for the Guardian encounter.</p><button id="sample-enterboss" class="primary" data-i18n="sample.boss">Challenge AEGIS–07 →</button><button id="sample-restart" class="secondary" data-i18n="sample.replay">Replay the field test</button></div></section>
   <section id="hud" class="hidden" data-i18n-aria-label="a11y.hud" aria-label="Combat status">
     <div class="player-hud"><div class="hud-caption"><span>RF–01 <b data-i18n="hud.player">FALCON</b></span><span id="health-number">100</span></div><div id="health-bar"><i></i></div><div class="hud-bottom"><span id="dash-status">Dash ready</span><span id="grenade-count">◆ ◆ ◆ ◆</span></div></div>
     <div class="objective"><span id="sector-label">01 / Jungle Infiltration</span><strong id="objective-label">Cross the rainforest. Reach the bridge.</strong><div class="progress-track"><i id="progress"></i><b></b><b></b></div></div>

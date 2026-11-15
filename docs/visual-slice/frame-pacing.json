@@ -1,0 +1,63 @@
+{
+  "browser": "157.0.8103.79",
+  "date": "2026-11-15T16:55:08.525Z",
+  "note": "Synthetic sustained firefight after 120 warm-up frames. Headless Chrome; CPU throttling is simulation, not a real low-end device. Includes simulation and rendering, excludes DOM HUD.",
+  "results": [
+    {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1,
+      "cpu": 1,
+      "sample": false,
+      "frames": 300,
+      "frameMedianMs": 16.699999999999818,
+      "frameP95Ms": 16.700000000000728,
+      "framesOver25ms": 0,
+      "cpuMedianMs": 0.3999999985098839,
+      "cpuP95Ms": 0.5,
+      "maxParticles": 313
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1,
+      "cpu": 1,
+      "sample": true,
+      "frames": 300,
+      "frameMedianMs": 16.699999999999818,
+      "frameP95Ms": 16.700000000000728,
+      "framesOver25ms": 0,
+      "cpuMedianMs": 0.19999999552965164,
+      "cpuP95Ms": 0.20000000298023224,
+      "maxParticles": 240
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "dpr": 2,
+      "cpu": 4,
+      "sample": false,
+      "frames": 300,
+      "frameMedianMs": 16.699999999999818,
+      "frameP95Ms": 16.800000000000182,
+      "framesOver25ms": 0,
+      "cpuMedianMs": 1.7000000029802322,
+      "cpuP95Ms": 2.399999998509884,
+      "maxParticles": 319
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "dpr": 2,
+      "cpu": 4,
+      "sample": true,
+      "frames": 300,
+      "frameMedianMs": 16.699999999999818,
+      "frameP95Ms": 16.799999999999727,
+      "framesOver25ms": 0,
+      "cpuMedianMs": 0.6000000014901161,
+      "cpuP95Ms": 1,
+      "maxParticles": 239
+    }
+  ]
+}

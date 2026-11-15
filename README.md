@@ -11,10 +11,28 @@ industrial ruins, and a living underground nest. Inspired by classic
 side-scrolling action games, Red Falcon brings its own eight-chapter campaign,
 characters, bosses, and sound.
 
-Built with native Canvas 2D and Web Audio. No runtime dependencies or remote asset
-requests.
+Built with native Canvas 2D and Web Audio. No runtime dependencies. All assets
+are served by the game itself; no third-party CDNs are required.
 
 ![Red Falcon: Broken Signal — title screen and mechanical guardian](docs/preview.png)
+
+## New visual sample
+
+**[Play the 30-second opening](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=intro)** · **[Challenge AEGIS–07](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=boss)**
+
+A playable art-and-motion prototype: rain-soaked jungle ruins, textured terrain,
+eight-frame running, directional aiming, jump/landing poses and a telegraphed
+Guardian encounter. English by default, with Chinese available in the top bar.
+The opening runs for 30 active seconds before offering the boss fight. Boss
+practice starts with full armor and all three weapons. Practice does not change
+campaign unlocks or records.
+
+![Visual sample — live gameplay](docs/visual-slice/preview.webp)
+
+The five WebP atlases load only for the sample (about 2 MB). Static lighting and
+terrain are cached, off-screen actors are culled, and particles are capped at
+240. See the [implementation and measured performance](docs/visual-slice/README.md)
+for methods, results and device limitations.
 
 ## Quick start
 

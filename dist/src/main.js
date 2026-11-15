@@ -1,3 +1,4 @@
+import {FrameMetrics} from './frame-metrics.js';
 import {LEVELS} from './levels.js';
 import {createProgress} from './progress.js';
 import {Game,WEAPONS,clamp} from './game.js';
@@ -9,7 +10,11 @@ const $=id=>document.getElementById(id),canvas=$('game'),audio=new AudioEngine()
 let storage=null;
 try { storage=window.localStorage; } catch { /* Storage is optional. */ }
 const progress=createProgress(storage);
-let selectedLevel=progress.unlocked;
+const sampleParam=new URLSearchParams(location.search).get('sample'),sampleMode=['intro','boss'].includes(sampleParam);
+let sampleChoice=sampleMode?sampleParam:'intro',assetsReady=false;
+const frameMetrics=new FrameMetrics();
+document.body.classList.toggle('visual-slice',sampleMode);
+let selectedLevel=sampleMode?0:progress.unlocked;
 const i18n=createI18n(storage),t=(key,params)=>i18n.t(key,params);
 let renderer,game,last=0,hudClock=0,noticeTimeout,bannerTimeout,hintTimeout;
 let difficulty='normal',mouseAim=false,pointer={x:0,y:0},guidePaused=false;
@@ -74,6 +79,22 @@ function applyLanguage(){
   updateAudioLabel();updateFullscreenLabel();updateBanner();
   if(activeNotice)$('notification').textContent=i18n.text(activeNotice);
   if(game){renderCampaign();updateHUD();if(game.state==='victory')renderResults();}
+  if(sampleMode)renderSampleMenu();
+}
+function renderSampleMenu(){
+  const set=(key,value)=>document.querySelector(`[data-i18n="${key}"]`).textContent=t(value);
+  set('hero.file','sample.file');set('hero.title','sample.title');set('hero.caption','hero.operation');set('hero.operation','sample.subtitle');set('action.start',sampleChoice==='boss'?'sample.boss':'sample.start');
+  $('chapter-brief').textContent=t('sample.brief');$('chapter-count').textContent=t('sample.detail');
+  $('sample-boss').textContent=t(sampleChoice==='boss'?'sample.start':'sample.boss');
+  $('slice-menu').classList.remove('hidden');$('slice-loading').textContent=t(assetsReady?'sample.loaded':'sample.loading');
+}
+async function loadSample(){
+  $('start').disabled=true;$('sample-boss').disabled=true;
+  try{await renderer.loadSlice();assetsReady=true;renderer.sliceMode=true;renderSampleMenu();$('start').disabled=false;$('sample-boss').disabled=false;}
+  catch(error){$('slice-loading').textContent=t('sample.failed');console.error('Sample textures failed to load',error);}
+}
+function beginSample(mode){
+  if(!assetsReady)return;sampleChoice=mode;clearInput();game.difficulty=difficulty;game.startSample(mode);frameMetrics.reset();showState();canvas.focus();audio.init();updateHUD();
 }
 function setLanguage(locale){
   if(!i18n.setLocale(locale))return;
@@ -81,8 +102,9 @@ function setLanguage(locale){
   if(game?.state==='playing')canvas.focus();
 }
 function showState(){
-  for(const [id,state]of [['menu','menu'],['pause-screen','paused'],['death-screen','dead'],['victory','victory']])$(id).classList.toggle('hidden',game.state!==state);
+  for(const [id,state]of [['menu','menu'],['pause-screen','paused'],['death-screen','dead'],['victory','victory'],['sample-ready','sample-ready']])$(id).classList.toggle('hidden',game.state!==state);
   const running=game.state==='playing';
+  document.body.classList.toggle('in-field',running||game.state==='paused');
   $('hud').classList.toggle('hidden',game.state==='menu');
   $('pause').classList.toggle('hidden',!running);
   $('touch-controls').classList.toggle('hidden',!running);
@@ -91,6 +113,7 @@ function showState(){
   if(game.state==='dead')$('retry').focus();
   if(game.state==='victory')$(game.levelIndex<LEVELS.length-1?'next-chapter':'replay').focus();
   if(game.state==='menu')$('start').focus();
+  if(game.state==='sample-ready')$('sample-enterboss').focus();
 }
 function event(e){
   audio.play(e);
@@ -101,17 +124,20 @@ function event(e){
       clearTimeout(bannerTimeout);bannerTimeout=setTimeout(()=>$('sector-banner').classList.add('hidden'),3100);break;
     case'pause':case'resume':case'death':showState();break;
     case'victory':finish();break;
+    case'sampleReady':showState();break;
   }
 }
 function start(){
+  if(sampleMode){beginSample(sampleChoice);return;}
+  frameMetrics.reset();
   clearInput();game.difficulty=difficulty;game.start(selectedLevel);showState();canvas.focus();audio.init();
   clearTimeout(hintTimeout);
   if(window.innerHeight>window.innerWidth)notice({key:'notice.touch'});
   else hintTimeout=setTimeout(()=>{if(game.state==='playing'&&game.maxX<900)notice({key:'notice.controls'});},4000);
   updateHUD();
 }
-function menu(){game.state='menu';clearInput();selectLevel(progress.unlocked);showState();$('boss-hud').classList.add('hidden');}
-function retry(){game.retry();clearInput();showState();canvas.focus();updateHUD();}
+function menu(){game.state='menu';clearInput();selectLevel(sampleMode?0:progress.unlocked);if(sampleMode)renderSampleMenu();showState();$('boss-hud').classList.add('hidden');}
+function retry(){frameMetrics.reset();game.retry();clearInput();showState();canvas.focus();updateHUD();}
 function pause(){game.pause();clearInput();if(game.state==='playing')canvas.focus();}
 function renderResults(){
   const final=game.levelIndex===LEVELS.length-1;
@@ -124,8 +150,10 @@ function renderResults(){
   $('final-time').textContent=formatTime(game.time);
   $('final-kills').textContent=game.kills+' / '+game.deaths;
   $('best-result').textContent=t('victory.best',{difficulty:{key:`difficulty.${difficulty}`},score:i18n.number(bestScore)})+(game.score>=bestScore?t('victory.newRecord'):'');
+  if(sampleMode){$('victory-eyebrow').textContent=t('sample.complete');$('victory-title').textContent=t('sample.win');$('victory-body').textContent=t('sample.winBody');$('next-chapter').classList.remove('hidden');$('next-chapter').textContent=t('sample.boss');$('replay').textContent=t('sample.replay');$('best-result').textContent=t('sample.unsaved');}
 }
 function finish(){
+  if(sampleMode){renderResults();showState();return;}
   progress.complete(game.levelIndex,difficulty,game.score);
   bestScore=progress.best(game.levelIndex,difficulty);renderCampaign();
   renderResults();showState();
@@ -148,6 +176,7 @@ function updateHUD(){
   $('boss-hud').querySelector('.boss-track i').style.width=game.boss.hp/game.boss.maxHp*100+'%';
   $('boss-phase').textContent=t(`boss.phase${game.boss.phase}`);
   $('boss-code').textContent=game.boss.code;$('boss-name').textContent=t(game.boss.nameKey);
+  if(sampleMode){$('sector-label').textContent=game.sample==='boss'?t('sample.arena'):t('sample.intro',{seconds:Math.max(0,Math.ceil(30-game.time))});$('objective-label').textContent=game.sample==='boss'?t('notice.boss'):t('sample.objective');$('progress').style.width=(game.sample==='boss'?100:Math.min(100,game.time/30*100))+'%';}
 }
 function keyDown(e){
   if(e.code==='Escape'){
@@ -179,9 +208,10 @@ async function toggleSound(){await audio.init();audio.toggle();updateAudioLabel(
 async function fullScreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await $('app').requestFullscreen();}catch{notice({key:'notice.fullscreen'});}}
 $('open-chapters').onclick=()=>{renderCampaign();$('chapters').showModal();};
 $('close-chapters').onclick=()=>$('chapters').close();
-$('next-chapter').onclick=()=>{if(game.state!=='victory'||!progress.isOpen(game.levelIndex+1))return;selectedLevel=game.levelIndex+1;start();};
-$('start').onclick=start;$('replay').onclick=start;$('resume').onclick=pause;$('pause').onclick=pause;$('restart').onclick=retry;$('retry').onclick=retry;
+$('next-chapter').onclick=()=>{if(sampleMode){beginSample('boss');return;}if(game.state!=='victory'||!progress.isOpen(game.levelIndex+1))return;selectedLevel=game.levelIndex+1;start();};
+$('start').onclick=start;$('replay').onclick=()=>sampleMode?beginSample('intro'):start();$('resume').onclick=pause;$('pause').onclick=pause;$('restart').onclick=retry;$('retry').onclick=retry;
 for(const id of ['exit','death-exit','victory-exit'])$(id).onclick=menu;
+$('sample-boss').onclick=()=>beginSample(sampleChoice==='boss'?'intro':'boss');$('sample-enterboss').onclick=()=>beginSample('boss');$('sample-restart').onclick=()=>beginSample('intro');
 $('sound').onclick=toggleSound;$('fullscreen').onclick=fullScreen;
 $('help').onclick=()=>{guidePaused=game.state==='playing';if(guidePaused)game.pause();$('guide').showModal();};
 const closeGuide=()=>$('guide').close();$('close-guide').onclick=closeGuide;$('guide-ready').onclick=closeGuide;
@@ -192,15 +222,16 @@ window.addEventListener('resize',()=>renderer?.resize());
 document.addEventListener('fullscreenchange',()=>{updateFullscreenLabel();renderer?.resize();});
 
 try{
-  game=new Game({onEvent:event,level:selectedLevel});applyLanguage();renderer=new Renderer(canvas,i18n);
-  Object.defineProperty(window,'redFalcon',{value:Object.freeze({snapshot:()=>({...game.snapshot(),locale:i18n.locale}),get metrics(){return{width:renderer.width,height:renderer.height,scale:renderer.scale,particles:game.particles.length};}})});
+  game=new Game({onEvent:event,level:selectedLevel});applyLanguage();renderer=new Renderer(canvas,i18n,{slice:sampleMode});if(sampleMode)loadSample();
+  Object.defineProperty(window,'redFalcon',{value:Object.freeze({snapshot:()=>({...game.snapshot(),locale:i18n.locale}),get metrics(){return{width:renderer.width,height:renderer.height,scale:renderer.scale,particles:game.particles.length,sampleAssetsReady:assetsReady,renderScale:sampleMode?1.2:1,terrainCachePixels:renderer.slice?.cachedPixels||0,...frameMetrics.snapshot()};}})});
   function frame(time){
     try{
-      const dt=Math.min((time-last)/1000||.016,.034);last=time;
+      const interval=time-last,begin=performance.now();const dt=Math.min(interval/1000||.016,.034);last=time;
       const input={held,pressed,aim:mouseAim?renderer.point(pointer.x,pointer.y,game.camera):null};
       const stalled=game.hitstop>0;game.update(dt,input);if(!stalled)pressed.clear();
       audio.update(dt,game.state,game.boss.active);renderer.render(game);hudClock+=dt;
       if(hudClock>.08){hudClock=0;if(game.state!=='menu')updateHUD();}
+      if(game.state==='playing')frameMetrics.add(performance.now()-begin,interval);
       requestAnimationFrame(frame);
     }catch(error){$('boot-error').classList.remove('hidden');console.error('Game runtime error',error);}
   }

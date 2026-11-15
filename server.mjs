@@ -2,7 +2,7 @@ import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 const root = resolve('dist');
-const types = {'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
+const types = {'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png'};
 http.createServer(async (req,res) => {
   const file = resolve(root, '.' + new URL(req.url, 'http://red-falcon.localhost').pathname.replace(/\/$/, '/index.html'));
   if (!file.startsWith(root + '/')) { res.writeHead(403).end(); return; }

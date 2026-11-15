@@ -1,3 +1,5 @@
+import {SliceRenderer} from './slice-renderer.js';
+import {SLICE_ZOOM} from './slice-spec.js';
 import {drawBackdrop,drawAtmosphere,drawTerrainDetails,drawChapterBoss} from './scenes.js';
 import {W,H,WEAPONS,clamp} from './game.js';
 const TAU=Math.PI*2;
@@ -8,14 +10,15 @@ function circle(c,x,y,r,color){c.fillStyle=color;c.beginPath();c.arc(x,y,r,0,TAU
 function rect(c,x,y,w,h,color){c.fillStyle=color;c.fillRect(x,y,w,h);}
 function glow(c,x,y,r,color){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,color);g.addColorStop(1,'transparent');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2);}
 export class Renderer {
-  constructor(canvas,i18n){this.i18n=i18n;this.canvas=canvas;this.c=canvas.getContext('2d',{alpha:false});this.width=0;this.height=0;this.scale=1;this.ox=0;this.oy=0;this.reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;this.layers=this.createLayers();this.resize();}
+  constructor(canvas,i18n,{slice=false}={}){this.sliceMode=slice;this.i18n=i18n;this.canvas=canvas;this.c=canvas.getContext('2d',{alpha:false});this.width=0;this.height=0;this.scale=1;this.ox=0;this.oy=0;this.reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;this.layers=null;this.resize();}
   resize(){const dpr=Math.min(window.devicePixelRatio||1,2),w=this.canvas.clientWidth,h=this.canvas.clientHeight;this.canvas.width=Math.floor(w*dpr);this.canvas.height=Math.floor(h*dpr);this.dpr=dpr;this.width=w;this.height=h;this.scale=Math.min(w/W,h/H);this.ox=(w-W*this.scale)/2;this.oy=(h-H*this.scale)/2;}
-  point(x,y,camera){const r=this.canvas.getBoundingClientRect();return{x:(x-r.left-this.ox)/this.scale+camera,y:(y-r.top-this.oy)/this.scale};}
+  async loadSlice(){if(!this.slicePromise)this.slicePromise=SliceRenderer.load(this).then(slice=>{this.layers=null;return this.slice=slice;}).catch(error=>{this.slicePromise=null;throw error;});return this.slicePromise;}
+  point(x,y,camera){const r=this.canvas.getBoundingClientRect(),x0=(x-r.left-this.ox)/this.scale,y0=(y-r.top-this.oy)/this.scale;return this.sliceMode?{x:x0/SLICE_ZOOM+camera,y:(y0-H*(1-SLICE_ZOOM))/SLICE_ZOOM}:{x:x0+camera,y:y0};}
   createLayers(){const layers=[];for(let level=0;level<3;level++){const canvas=document.createElement('canvas');canvas.width=2300;canvas.height=720;const c=canvas.getContext('2d'),random=rng(117+level*400);const color=['#294c4d','#1a3e40','#112e31'][level];
     for(let i=0;i<34-level*5;i++){const x=random()*2300,y=330+random()*230,h=120+random()*300,w=35+random()*60;poly(c,[[x-w,y+150],[x-w*.55,y-h*.3],[x-10,y-h],[x+12,y-h*1.05],[x+w*.55,y-h*.3],[x+w,y+150]],color);for(let j=0;j<7;j++){const lx=x+(random()-.5)*w*3,ly=y-h+random()*h*.9;this.leafCluster(c,lx,ly,40+random()*65,color,random);}}
     layers.push(canvas);}return layers;}
   leafCluster(c,x,y,r,color,random){c.fillStyle=color;for(let i=0;i<6;i++){c.beginPath();c.ellipse(x+(random()-.5)*r,y+(random()-.5)*r*.6,r*(.35+random()*.6),r*(.18+random()*.3),random()*1.3-.65,0,TAU);c.fill();}}
-  background(cam,t){const c=this.c;
+  background(cam,t){const c=this.c;this.layers??=this.createLayers();
     const sky=c.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#102b32');sky.addColorStop(.42,'#335959');sky.addColorStop(.76,'#608076');sky.addColorStop(1,'#172f32');c.fillStyle=sky;c.fillRect(0,0,W,H);
     glow(c,850-cam*.025,150,420,'#ccdfb322');circle(c,880-cam*.025,115,42,'#c7d9b81a');
     const rand=rng(41);for(let i=0;i<14;i++){const x=i*160-(cam*.07)%160,y=270+rand()*120;poly(c,[[x-90,450],[x-35,y],[x+20,y-65],[x+70,y+30],[x+160,450]],'#315358');}
@@ -107,7 +110,7 @@ export class Renderer {
     for(const text of game.texts){c.globalAlpha=Math.min(1,text.life*2);c.font='bold 13px monospace';c.textAlign='center';c.fillStyle=text.color;c.fillText(this.i18n.text(text.text),text.x,text.y);}c.globalAlpha=1;
   }
   atmosphere(cam,t){const c=this.c;c.save();for(let i=0;i<60;i++){const x=((i*179-t*85-cam*.15)%1400+1400)%1400-50,y=(i*67+t*410)%780-30;line(c,x,y,x-5,y+17,'#b7d9c51b',1);}for(let i=0;i<20;i++){const x=((i*83+Math.sin(t*.6+i)*30-cam*.35)%1300+1300)%1300,y=280+(i*31)%280+Math.sin(t+i)*10;c.globalAlpha=.3+Math.sin(t*2+i)*.25;circle(c,x,y,1.5,'#e3eaa2');}c.restore();}
-  render(game){this.game=game;const c=this.c,t=game.visualTime;c.setTransform(this.dpr,0,0,this.dpr,0,0);c.fillStyle='#091b20';c.fillRect(0,0,this.width,this.height);c.translate(this.ox,this.oy);c.scale(this.scale,this.scale);c.save();c.beginPath();c.rect(0,0,W,H);c.clip();
+  render(game){this.game=game;if(this.sliceMode){if(this.slice)this.slice.render(game);else{this.c.setTransform(1,0,0,1,0,0);this.c.fillStyle='#06171d';this.c.fillRect(0,0,this.canvas.width,this.canvas.height);}return;}const c=this.c,t=game.visualTime;c.setTransform(this.dpr,0,0,this.dpr,0,0);c.fillStyle='#091b20';c.fillRect(0,0,this.width,this.height);c.translate(this.ox,this.oy);c.scale(this.scale,this.scale);c.save();c.beginPath();c.rect(0,0,W,H);c.clip();
     const jungle=game.level.theme==='jungle',menu=game.state==='menu',cam=menu?game.world-1390+Math.sin(t*.08)*18:game.camera;let shake=this.reduced?0:game.shake;c.translate(Math.sin(t*103)*shake,Math.cos(t*131)*shake*.55);
     if(jungle){this.background(cam,t);this.foliage(cam,t);}else drawBackdrop(c,game.level.theme,cam,t);this.ground(cam,t);drawTerrainDetails(c,game,cam,t);
     c.save();c.translate(-cam,0);

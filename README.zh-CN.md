@@ -9,9 +9,21 @@
 从雨林前哨出发，穿过堡垒、瀑布、工业废墟，最终进入地下活体巢穴，追踪失联信号。
 赤隼以经典横版动作游戏为灵感，重新设计了八关战役、角色、Boss 与声音。
 
-基于浏览器原生 Canvas 2D 和 Web Audio，无运行时依赖，无远程素材请求。
+基于浏览器原生 Canvas 2D 和 Web Audio，无运行时依赖。所有素材由游戏自身提供，无需第三方 CDN。
 
 ![赤隼：断线行动——主界面与机械守卫](docs/preview.zh-CN.png)
+
+## 新版画面可玩样板
+
+**[试玩前 30 秒](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=intro)** · **[直接挑战 AEGIS–07](https://red-falcon-broken-signal.arronstudio.chatgpt.site/?sample=boss)**
+
+雨林废墟、潮湿金属与岩壁、八帧跑动、方向瞄准、跳跃落地姿态，以及带蓄力预警的守卫战。
+默认英文，可在右上角切换中文。突入段累计游玩 30 秒后，可进入 Boss 战；Boss 练习会补满护甲并解锁三种武器。样板与战役解锁和最高分分开。
+
+![新版画面样板——实际游玩画面](docs/visual-slice/preview.webp)
+
+五张 WebP 图集共约 2 MB，仅在进入样板时加载。静态光照与地形使用缓存，只绘制可见角色，粒子上限为 240。
+[实现与性能实测](docs/visual-slice/README.md)记录了测试条件、结果与设备验证范围。
 
 ## 快速开始
 

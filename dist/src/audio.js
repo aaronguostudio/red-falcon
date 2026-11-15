@@ -6,6 +6,7 @@ export class AudioEngine {
   hiss(duration=.1,volume=.15,freq=1500){if(!this.ctx||!this.enabled)return;const s=this.ctx.createBufferSource(),f=this.ctx.createBiquadFilter(),g=this.ctx.createGain(),t=this.ctx.currentTime;s.buffer=this.noise;f.type='lowpass';f.frequency.value=freq;g.gain.setValueAtTime(volume,t);g.gain.exponentialRampToValueAtTime(.001,t+duration);s.connect(f);f.connect(g);g.connect(this.master);s.start();s.stop(t+duration);s.onended=()=>{s.disconnect();f.disconnect();g.disconnect();};}
   play(event){if(!this.enabled)return;switch(event.type){
     case'shoot':if(event.weapon===2){this.tone(1200,.22,'sawtooth',.12,120);this.hiss(.14,.12,4000);}else{this.tone(event.weapon===1?130:210,.07,'square',.055,55);this.hiss(.05,.07,2400);}break;
+    case'land':this.hiss(.07,.045,850);this.tone(68,.08,'sine',.08,32);break;
     case'jump':this.tone(event.double?440:200,.16,'sine',.13,event.double?850:420);break;
     case'dash':this.hiss(.2,.22,5000);this.tone(220,.16,'sawtooth',.05,70);break;
     case'hit':this.tone(190,.035,'triangle',.08,80);break;

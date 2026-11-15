@@ -47,3 +47,28 @@ h1 .title-caption{font-weight:700}.subtitle b{font-weight:400}.mission-details s
 @media(max-height:720px) and (min-height:501px){:lang(en) h1{font-size:65px}:lang(en) .hero{top:13%}:lang(en) .intro{margin:12px 0}:lang(en) .subtitle{margin-top:14px}.hero{top:13%}.hero h1{margin-top:18px}.hero .intro{margin:14px 0}.hero .subtitle{margin-top:14px}}
 @media(max-height:500px){.chapter-trigger{margin-top:8px;padding:6px 0;max-width:370px;font-size:10px}.hero .difficulty{display:none}:lang(en) h1{font-size:42px}:lang(en) .hero{top:14%}.hero h1{font-size:58px;margin-top:10px}.mission-strip{height:44px}.hero .subtitle{margin:8px 0}:lang(en) .subtitle{margin:7px 0}.hero .launch{margin-top:10px}#victory .panel{max-height:calc(100dvh - 60px)}.chapter-list{grid-template-columns:1fr 1fr}.chapter-option small{display:none}.chapter-option{padding:12px}}
 @media(max-width:380px) and (min-height:501px) and (max-height:620px){:lang(en) .hero h1{font-size:52px}.hero h1{font-size:78px}.hero .intro{font-size:11px}.hero .difficulty{margin-top:8px}#difficulty-note{display:none}}
+
+/* Visual slice: a quiet mission launcher, then compact combat instrumentation. */
+.slice-entry{display:inline-block;margin-top:12px;font:11px var(--mono);color:var(--accent);text-underline-offset:5px}
+#slice-menu small{display:block;margin-top:14px;font:9px var(--mono);letter-spacing:1px;color:var(--muted)}
+#slice-menu>a{display:inline-block;margin-top:18px;font-size:11px;color:var(--muted);text-underline-offset:4px}
+.visual-slice .slice-entry,.visual-slice #open-chapters,.visual-slice .scene-label,.visual-slice .mission-strip,.visual-slice .top-code,.visual-slice .hero.operationCode{display:none}
+.visual-slice .hero{top:18%;width:50%;max-width:640px;left:7%}
+.visual-slice .hero h1{font-size:clamp(52px,6.8vw,96px);letter-spacing:0;line-height:.92}
+.visual-slice:lang(zh-CN) .hero h1{font-size:clamp(52px,6.2vw,88px)}
+.visual-slice .subtitle small{display:none}.visual-slice .menu{background:linear-gradient(90deg,#04171ff2 0%,#04171fc9 34%,#04171f20 76%)}
+.visual-slice .grain{display:none}.visual-slice button:disabled{opacity:.45;cursor:wait}
+.visual-slice.in-field .topbar{height:46px;justify-content:flex-end;padding:0 20px;background:transparent;border:0}
+.visual-slice.in-field .brand{display:none}.visual-slice.in-field .language-switch{height:28px}.visual-slice.in-field .icon-btn{width:28px;height:28px}
+.visual-slice .player-hud{top:25px;left:28px;width:180px;padding:10px 14px;background:#071c25b0;border-left:2px solid #e0eac0}
+.visual-slice .hud-caption b{font-size:11px}.visual-slice #health-bar{margin:7px 0;height:5px}.visual-slice .hud-bottom{font-size:9px}
+.visual-slice .objective{top:24px;width:340px}.visual-slice .objective strong{font-size:10px;line-height:1.6;margin:6px 0}.visual-slice .objective>span{font-size:9px;letter-spacing:1px}
+.visual-slice .score-hud{top:60px;right:28px}.visual-slice .score-hud strong{font-size:20px;margin:4px 0}.visual-slice .score-hud>span{font-size:8px}
+.visual-slice #boss-hud{top:103px;width:390px;padding:8px 14px;background:#061b23a0}.visual-slice #boss-hud strong{font-size:11px}
+.visual-slice .weapon-hud{bottom:22px;right:28px;min-width:190px;background:#071b236b;padding:8px 12px;border-top-color:#c1d9ca60}
+.visual-slice .weapon-hud strong{font-size:13px;margin:5px 0}.visual-slice .weapon-hud small{font-size:9px}
+.visual-slice .keyboard-hint{bottom:30px;left:28px}.visual-slice #sector-banner{display:none}.visual-slice #notification{bottom:100px;padding:8px 14px;font-size:10px;background:#081e27c9}
+@media(max-width:700px){.visual-slice .hero{width:85%;top:18%}.visual-slice .hero h1{font-size:56px}.visual-slice .objective{top:132px;width:240px}.visual-slice #boss-hud{top:198px;width:80%}.visual-slice .player-hud{left:16px;top:54px;width:145px}.visual-slice .score-hud{right:16px;top:62px}.visual-slice .weapon-hud{bottom:95px}}
+@media(max-height:500px){.visual-slice .hero{top:13%;width:65%}.visual-slice .hero h1{font-size:42px;margin:10px 0}.visual-slice .hero .title-caption{font-size:8px;margin-top:10px}.visual-slice .hero .subtitle{font-size:10px;margin:8px 0}.visual-slice #slice-menu small{margin-top:6px;font-size:8px}.visual-slice #slice-menu>a{margin-top:9px;font-size:10px}.visual-slice #sample-boss{margin-top:6px;padding:7px 0}.visual-slice .player-hud{top:15px;left:15px;width:145px;padding:7px 10px}.visual-slice .objective{top:19px;width:270px}.visual-slice .objective strong{display:none}.visual-slice .score-hud{top:46px;right:20px}.visual-slice #boss-hud{top:57px;width:300px;padding:5px 10px}.visual-slice .keyboard-hint{bottom:16px;font-size:8px}.visual-slice .weapon-hud{bottom:16px;min-width:150px}.visual-slice #notification{bottom:76px}.visual-slice .top-actions{gap:3px}}
+@media(hover:none),(pointer:coarse){.visual-slice .weapon-hud{bottom:84px;right:18px}.visual-slice .weapon-hud small{display:none}.visual-slice .weapon-hud strong{margin:3px 0}.visual-slice .weapon-hud>span{font-size:8px}.visual-slice .weapon-hud{min-width:150px;padding:5px 8px}.visual-slice #notification{bottom:137px}}
+@media(max-height:500px) and (pointer:coarse){.visual-slice #notification{top:102px;bottom:auto}.visual-slice .weapon-hud{bottom:8px;left:160px;right:auto;width:165px;min-width:0}}

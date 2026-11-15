@@ -1,0 +1,69 @@
+{
+  "browser": "157.0.8103.79",
+  "date": "2026-11-15T16:54:38.160Z",
+  "note": "Canvas command submission CPU time; headless Chrome, not total GPU/frame time. Identical scene fixtures and 120 particles.",
+  "results": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "dpr": 1,
+      "renderer": "visual-slice",
+      "cases": [
+        {
+          "name": "opening",
+          "medianMs": 0.10000000149011612,
+          "p95Ms": 0.20000000298023224,
+          "maxMs": 0.20000000298023224,
+          "samples": 240
+        },
+        {
+          "name": "traversal",
+          "medianMs": 0.10000000149011612,
+          "p95Ms": 0.20000000298023224,
+          "maxMs": 0.20000000298023224,
+          "samples": 240
+        },
+        {
+          "name": "boss",
+          "medianMs": 0.10000000149011612,
+          "p95Ms": 0.20000000298023224,
+          "maxMs": 0.20000000298023224,
+          "samples": 240
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "dpr": 1,
+      "renderer": "visual-slice",
+      "cases": [
+        {
+          "name": "opening",
+          "medianMs": 0.10000000149011612,
+          "p95Ms": 0.20000000298023224,
+          "maxMs": 0.29999999701976776,
+          "samples": 240
+        },
+        {
+          "name": "traversal",
+          "medianMs": 0.10000000149011612,
+          "p95Ms": 0.20000000298023224,
+          "maxMs": 0.30000000447034836,
+          "samples": 240
+        },
+        {
+          "name": "boss",
+          "medianMs": 0.10000000149011612,
+          "p95Ms": 0.20000000298023224,
+          "maxMs": 0.20000000298023224,
+          "samples": 240
+        }
+      ]
+    }
+  ]
+}
